@@ -30,15 +30,18 @@
 library(ppcor)
 library(emmeans)
 
+file1 = "/computation/CorticalMeasuresENIGMA_ThickAvg.csv"
+file2 = "/computation/CorticalMeasuresENIGMA_SurfAvg.csv"
+
 for(cc in c("complete","asis")){
 
-for(fsfile in c("/computation/CorticalMeasuresENIGMA_ThickAvg.csv","/computation/CorticalMeasuresENIGMA_SurfAvg.csv")){
+for(fsfile in c(file1,file2)){
 
-if(fsfile == "/computation/CorticalMeasuresENIGMA_ThickAvg.csv" && cc == "complete"){
+if(fsfile == file1 && cc == "complete"){
 	filetype="thickness_complete"
-} else if(fsfile == "/computation/CorticalMeasuresENIGMA_ThickAvg.csv" && cc == "asis"){
+} else if(fsfile == file1 && cc == "asis"){
 	filetype="thickness_asis"
-} else if(fsfile == "/computation/CorticalMeasuresENIGMA_SurfAvg.csv" && cc == "asis"){
+} else if(fsfile == file2 && cc == "asis"){
 	filetype="surfarea_asis"
 } else {
 	filetype="surfarea_complete"	
@@ -55,7 +58,7 @@ cat('Working on ',fsfile,' a(n) ', cc, ' analysis\n')
 Cort <- read.csv(fsfile); #Read in the phenotypes file
 
 #check to make sure all of the necessary columns are present
-if(fsfile == "/computation/CorticalMeasuresENIGMA_ThickAvg.csv"){
+if(fsfile == file1){
 	CortCols=c("SubjID", "L_bankssts_thickavg", "L_caudalanteriorcingulate_thickavg", "L_caudalmiddlefrontal_thickavg", "L_cuneus_thickavg", "L_entorhinal_thickavg", "L_fusiform_thickavg", "L_inferiorparietal_thickavg", "L_inferiortemporal_thickavg", "L_isthmuscingulate_thickavg", "L_lateraloccipital_thickavg", "L_lateralorbitofrontal_thickavg", "L_lingual_thickavg", "L_medialorbitofrontal_thickavg", "L_middletemporal_thickavg", "L_parahippocampal_thickavg", "L_paracentral_thickavg", "L_parsopercularis_thickavg", "L_parsorbitalis_thickavg", "L_parstriangularis_thickavg", "L_pericalcarine_thickavg", "L_postcentral_thickavg", "L_posteriorcingulate_thickavg", "L_precentral_thickavg", "L_precuneus_thickavg", "L_rostralanteriorcingulate_thickavg", "L_rostralmiddlefrontal_thickavg", "L_superiorfrontal_thickavg", "L_superiorparietal_thickavg", "L_superiortemporal_thickavg", "L_supramarginal_thickavg", "L_frontalpole_thickavg", "L_temporalpole_thickavg", "L_transversetemporal_thickavg", "L_insula_thickavg", "R_bankssts_thickavg", "R_caudalanteriorcingulate_thickavg", "R_caudalmiddlefrontal_thickavg", "R_cuneus_thickavg", "R_entorhinal_thickavg", "R_fusiform_thickavg", "R_inferiorparietal_thickavg", "R_inferiortemporal_thickavg", "R_isthmuscingulate_thickavg", "R_lateraloccipital_thickavg", "R_lateralorbitofrontal_thickavg", "R_lingual_thickavg", "R_medialorbitofrontal_thickavg", "R_middletemporal_thickavg", "R_parahippocampal_thickavg", "R_paracentral_thickavg", "R_parsopercularis_thickavg", "R_parsorbitalis_thickavg", "R_parstriangularis_thickavg", "R_pericalcarine_thickavg", "R_postcentral_thickavg", "R_posteriorcingulate_thickavg", "R_precentral_thickavg", "R_precuneus_thickavg", "R_rostralanteriorcingulate_thickavg", "R_rostralmiddlefrontal_thickavg", "R_superiorfrontal_thickavg", "R_superiorparietal_thickavg", "R_superiortemporal_thickavg", "R_supramarginal_thickavg", "R_frontalpole_thickavg", "R_temporalpole_thickavg", "R_transversetemporal_thickavg", "R_insula_thickavg", "LThickness", "RThickness", "LSurfArea", "RSurfArea", "ICV")
 	cortcolind=match(CortCols,names(Cort))
 	if(length(which(is.na(cortcolind))) > 0){
@@ -1217,7 +1220,7 @@ cat('Rerunning models controlling for either average thickness over the cortex o
 
 ##################
 #######################
-if(fsfile == "/computation/CorticalMeasuresENIGMA_ThickAvg.csv"){
+if(fsfile == file1){
         whole=" + MThickness"
 } else {
         whole=" + FullSurfArea"
