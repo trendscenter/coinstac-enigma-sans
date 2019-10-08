@@ -30,8 +30,17 @@
 library(ppcor)
 library(emmeans)
 
+args = commandArgs(trailingOnly=TRUE)
+baseDir = args[1]
+
+#file1 = file.path(baseDir, "CorticalMeasuresENIGMA_ThickAvg.csv")
+#file2 = file.path(baseDir, "CorticalMeasuresENIGMA_SurfAvg.csv")
+#covarFile = file.path(baseDir, "Covariates.csv")
+
 file1 = "/computation/CorticalMeasuresENIGMA_ThickAvg.csv"
 file2 = "/computation/CorticalMeasuresENIGMA_SurfAvg.csv"
+covarFile = "/computation/Covariates.csv"
+
 
 for(cc in c("complete","asis")){
 
@@ -110,7 +119,7 @@ Cort = cbind(Cort, meanCort)
 if(anyDuplicated(Cort[,c("SubjID")]) != 0) { stop(paste0('You have duplicate SubjIDs in your ', fsfile, 'file.\nMake sure there are no repeat SubjIDs.\n')) }
 
 
-Covs <- read.csv("/computation/Covariates.csv"); #Read in the covariates file
+Covs <- read.csv(covarFile); #Read in the covariates file
 
 # Check for duplicated SubjIDs that may cause issues with merging data sets.
 if(anyDuplicated(Covs[,c("SubjID")]) != 0) { stop('You have duplicate SubjIDs in your Covariates.csv file.\nMake sure there are no repeat SubjIDs.') }

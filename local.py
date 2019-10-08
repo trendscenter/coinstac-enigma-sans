@@ -1,6 +1,5 @@
-#import glob
 import json
-#import os
+import os
 import subprocess
 import sys
 from utils import listRecursive
@@ -8,7 +7,11 @@ from utils import listRecursive
 
 def local_1(args):
     # Running the first script
-    regr_args = ["/usr/bin/Rscript", "/computation/SZ_CortReg_20160420.R"]
+    scriptDir = "/computation/enigma_scripts"
+    scriptName = "SZ_CortReg_20160420.R"
+    RScriptDir = "/usr/bin/Rscript"
+
+    regr_args = [RScriptDir, os.path.join(scriptDir, scriptName)]
     subprocess.call(regr_args, cwd=args["state"]["transferDirectory"],
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL)
