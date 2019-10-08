@@ -11,17 +11,19 @@ def local_1(args):
     scriptName = "SZ_CortReg_20160420.R"
     RScriptDir = "/usr/bin/Rscript"
 
-    regr_args = [RScriptDir, os.path.join(scriptDir, scriptName)]
-    subprocess.call(regr_args, cwd=args["state"]["transferDirectory"],
+    regr_args = [
+        RScriptDir,
+        os.path.join(scriptDir, scriptName), args["state"]["baseDirectory"],
+        args["state"]["transferDirectory"]
+    ]
+    subprocess.call(regr_args,
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL)
 
-    output_dict = {
-        "computation_phase": "local_1"
-    }
-    
+    output_dict = {"computation_phase": "local_1"}
+
     computation_output = {"output": output_dict}
-    
+
     return json.dumps(computation_output)
 
 

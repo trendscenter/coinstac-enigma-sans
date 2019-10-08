@@ -32,14 +32,17 @@ library(emmeans)
 
 args = commandArgs(trailingOnly=TRUE)
 baseDir = args[1]
+transferDir = args[2]
 
 #file1 = file.path(baseDir, "CorticalMeasuresENIGMA_ThickAvg.csv")
 #file2 = file.path(baseDir, "CorticalMeasuresENIGMA_SurfAvg.csv")
 #covarFile = file.path(baseDir, "Covariates.csv")
 
-file1 = "/computation/CorticalMeasuresENIGMA_ThickAvg.csv"
-file2 = "/computation/CorticalMeasuresENIGMA_SurfAvg.csv"
-covarFile = "/computation/Covariates.csv"
+setwd(baseDir)
+
+file1 = "CorticalMeasuresENIGMA_ThickAvg.csv"
+file2 = "CorticalMeasuresENIGMA_SurfAvg.csv"
+covarFile = "Covariates.csv"
 
 
 for(cc in c("complete","asis")){
@@ -57,7 +60,7 @@ if(fsfile == file1 && cc == "complete"){
 }
 
 #create log file
-messages=file(paste0(fsfile,paste0("_",cc,".log")), open="wt")
+messages=file(paste0(transferDir, "/", fsfile,paste0("_",cc,".log")), open="wt")
 #rest=file("rest.Rout", open="wt")
 sink(messages, type="message")
 sink(messages, type="output")
@@ -167,7 +170,7 @@ for(z in (ncol(Covs)+1):ncol(merged_ordered)){
 }
 
 #Save raw values
-save(raw.means, sd.raw, n.raw, min.raw, max.raw, file=paste0("RawMeans_",filetype,".Rdata"))
+save(raw.means, sd.raw, n.raw, min.raw, max.raw, file=paste0(transferDir, "/","RawMeans_",filetype,".Rdata"))
 
 
 #Get raw means for each of the structures for the Dx groups:
@@ -192,7 +195,7 @@ for(DXvalue in 0:1){
    }
 
    #Save raw values
-   save(raw.means, sd.raw, n.raw, min.raw, max.raw, file=paste0("RawMeans_DX_",DXvalue,"_",filetype,".Rdata"))    
+   save(raw.means, sd.raw, n.raw, min.raw, max.raw, file=paste0(transferDir, "/","RawMeans_DX_",DXvalue,"_",filetype,".Rdata"))    
 }
 
 
@@ -223,7 +226,7 @@ for(APvalue in 0:4){
         max.raw[z-ncol(Covs)]=max(merged_ordered[APgroup,z], na.rm=T)
    }
    #Save raw values
-   save(raw.means, sd.raw, n.raw, min.raw, max.raw, file=paste0("RawMeans_AP_",APvalue,"_",filetype,".Rdata"))  
+   save(raw.means, sd.raw, n.raw, min.raw, max.raw, file=paste0(transferDir, "/","RawMeans_AP_",APvalue,"_",filetype,".Rdata"))  
   #} # end if (length(APgroup)>0){
 }
 
@@ -458,7 +461,7 @@ n.hand2.dx0=length(which(merged_ordered$HAND==2 & merged_ordered$Dx==0))   # Num
 n.hand2.dx1=length(which(merged_ordered$HAND==2 & merged_ordered$Dx==1))   # Number Ambidextrous patients
 
 #Save demographic info
-save(age.mu, age.sd, age.range, age.mu.dx0, age.sd.dx0, age.range.dx0, age.mu.dx1, age.sd.dx1, age.range.dx1, age.mu, age.sd, age.range, age.mu.dx0, age.sd.dx0, age.range.dx0, age.mu.dx1, age.sd.dx1, age.range.dx1, age.mu.AP0, age.sd.AP0, age.range.AP0, age.mu.AP1, age.sd.AP1, age.range.AP1, age.mu.AP2, age.sd.AP2, age.range.AP2, age.mu.AP3, age.sd.AP3, age.range.AP3, age.mu.AP4, age.sd.AP4, age.range.AP4, cpz.mu.dx1, cpz.sd.dx1, cpz.range.dx1, cpz.mu.AP1, cpz.sd.AP1, cpz.range.AP1, cpz.mu.AP2, cpz.sd.AP2, cpz.range.AP2, cpz.mu.AP3, cpz.sd.AP3, cpz.range.AP3, cpz.mu.AP4, cpz.sd.AP4, cpz.range.AP4, ao.mu.dx1, ao.sd.dx1, ao.range.dx1, ao.mu.AP1, ao.sd.AP1, ao.range.AP1, ao.mu.AP2, ao.sd.AP2, ao.range.AP2, ao.mu.AP3, ao.sd.AP3, ao.range.AP3, ao.mu.AP4, ao.sd.AP4, ao.range.AP4, durill.mu.dx1, durill.sd.dx1, durill.range.dx1, durill.mu.AP1, durill.sd.AP1, durill.range.AP1, durill.mu.AP2, durill.sd.AP2, durill.range.AP2, durill.mu.AP3, durill.sd.AP3, durill.range.AP3, durill.mu.AP4, durill.sd.AP4, durill.range.AP4, pansstot.mu.dx1, pansstot.sd.dx1, pansstot.range.dx1, pansstot.mu.AP1, pansstot.sd.AP1, pansstot.range.AP1, pansstot.mu.AP2, pansstot.sd.AP2, pansstot.range.AP2, pansstot.mu.AP3, pansstot.sd.AP3, pansstot.range.AP3, pansstot.mu.AP4, pansstot.sd.AP4, pansstot.range.AP4, pansspos.mu.dx1, pansspos.sd.dx1, pansspos.range.dx1, pansspos.mu.AP1, pansspos.sd.AP1, pansspos.range.AP1, pansspos.mu.AP2, pansspos.sd.AP2, pansspos.range.AP2, pansspos.mu.AP3, pansspos.sd.AP3, pansspos.range.AP3, pansspos.mu.AP4, pansspos.sd.AP4, pansspos.range.AP4, panssneg.mu.dx1, panssneg.sd.dx1, panssneg.range.dx1, panssneg.mu.AP1, panssneg.sd.AP1, panssneg.range.AP1, panssneg.mu.AP2, panssneg.sd.AP2, panssneg.range.AP2, panssneg.mu.AP3, panssneg.sd.AP3, panssneg.range.AP3, panssneg.mu.AP4, panssneg.sd.AP4, panssneg.range.AP4, sapstot.mu.dx1, sapstot.sd.dx1, sapstot.range.dx1, sapstot.mu.AP1, sapstot.sd.AP1, sapstot.range.AP1, sapstot.mu.AP2, sapstot.sd.AP2, sapstot.range.AP2, sapstot.mu.AP3, sapstot.sd.AP3, sapstot.range.AP3, sapstot.mu.AP4, sapstot.sd.AP4, sapstot.range.AP4, sanstot.mu.dx1, sanstot.sd.dx1, sanstot.range.dx1, sanstot.mu.AP1, sanstot.sd.AP1, sanstot.range.AP1, sanstot.mu.AP2, sanstot.sd.AP2, sanstot.range.AP2, sanstot.mu.AP3, sanstot.sd.AP3, sanstot.range.AP3, sanstot.mu.AP4, sanstot.sd.AP4, sanstot.range.AP4, parentses.mu.dx0, parentses.sd.dx0, parentses.range.dx0, parentses.n.dx0, parentses.mu.dx1,parentses.sd.dx1,parentses.range.dx1, parentses.n.dx1, parentses.mu.AP1,parentses.sd.AP1,parentses.range.AP1,parentses.mu.AP2,parentses.sd.AP2,parentses.range.AP2,parentses.mu.AP3,parentses.sd.AP3,parentses.range.AP3,parentses.mu.AP4,parentses.sd.AP4,parentses.range.AP4,n.dx0, n.dx1, n.AP0, n.AP1, n.AP2, n.AP3, n.AP4, n.fem, n.mal, n.fem.dx0, n.mal.dx0, n.fem.dx1, n.mal.dx1, n.fem.AP0, n.mal.AP0, n.fem.AP1, n.mal.AP1, n.fem.AP2, n.mal.AP2, n.fem.AP3, n.mal.AP3, n.fem.AP4, n.mal.AP4, n.hand0.dx0, n.hand0.dx1, n.hand1.dx0, n.hand1.dx1, n.hand2.dx0, n.hand2.dx1, iq.mu.dx0, iq.sd.dx0, iq.range.dx0, iq.n.dx0, iq.mu.dx1, iq.sd.dx1, iq.range.dx1, iq.n.dx1, file=paste0("Demographics_",filetype,".Rdata"))
+save(age.mu, age.sd, age.range, age.mu.dx0, age.sd.dx0, age.range.dx0, age.mu.dx1, age.sd.dx1, age.range.dx1, age.mu, age.sd, age.range, age.mu.dx0, age.sd.dx0, age.range.dx0, age.mu.dx1, age.sd.dx1, age.range.dx1, age.mu.AP0, age.sd.AP0, age.range.AP0, age.mu.AP1, age.sd.AP1, age.range.AP1, age.mu.AP2, age.sd.AP2, age.range.AP2, age.mu.AP3, age.sd.AP3, age.range.AP3, age.mu.AP4, age.sd.AP4, age.range.AP4, cpz.mu.dx1, cpz.sd.dx1, cpz.range.dx1, cpz.mu.AP1, cpz.sd.AP1, cpz.range.AP1, cpz.mu.AP2, cpz.sd.AP2, cpz.range.AP2, cpz.mu.AP3, cpz.sd.AP3, cpz.range.AP3, cpz.mu.AP4, cpz.sd.AP4, cpz.range.AP4, ao.mu.dx1, ao.sd.dx1, ao.range.dx1, ao.mu.AP1, ao.sd.AP1, ao.range.AP1, ao.mu.AP2, ao.sd.AP2, ao.range.AP2, ao.mu.AP3, ao.sd.AP3, ao.range.AP3, ao.mu.AP4, ao.sd.AP4, ao.range.AP4, durill.mu.dx1, durill.sd.dx1, durill.range.dx1, durill.mu.AP1, durill.sd.AP1, durill.range.AP1, durill.mu.AP2, durill.sd.AP2, durill.range.AP2, durill.mu.AP3, durill.sd.AP3, durill.range.AP3, durill.mu.AP4, durill.sd.AP4, durill.range.AP4, pansstot.mu.dx1, pansstot.sd.dx1, pansstot.range.dx1, pansstot.mu.AP1, pansstot.sd.AP1, pansstot.range.AP1, pansstot.mu.AP2, pansstot.sd.AP2, pansstot.range.AP2, pansstot.mu.AP3, pansstot.sd.AP3, pansstot.range.AP3, pansstot.mu.AP4, pansstot.sd.AP4, pansstot.range.AP4, pansspos.mu.dx1, pansspos.sd.dx1, pansspos.range.dx1, pansspos.mu.AP1, pansspos.sd.AP1, pansspos.range.AP1, pansspos.mu.AP2, pansspos.sd.AP2, pansspos.range.AP2, pansspos.mu.AP3, pansspos.sd.AP3, pansspos.range.AP3, pansspos.mu.AP4, pansspos.sd.AP4, pansspos.range.AP4, panssneg.mu.dx1, panssneg.sd.dx1, panssneg.range.dx1, panssneg.mu.AP1, panssneg.sd.AP1, panssneg.range.AP1, panssneg.mu.AP2, panssneg.sd.AP2, panssneg.range.AP2, panssneg.mu.AP3, panssneg.sd.AP3, panssneg.range.AP3, panssneg.mu.AP4, panssneg.sd.AP4, panssneg.range.AP4, sapstot.mu.dx1, sapstot.sd.dx1, sapstot.range.dx1, sapstot.mu.AP1, sapstot.sd.AP1, sapstot.range.AP1, sapstot.mu.AP2, sapstot.sd.AP2, sapstot.range.AP2, sapstot.mu.AP3, sapstot.sd.AP3, sapstot.range.AP3, sapstot.mu.AP4, sapstot.sd.AP4, sapstot.range.AP4, sanstot.mu.dx1, sanstot.sd.dx1, sanstot.range.dx1, sanstot.mu.AP1, sanstot.sd.AP1, sanstot.range.AP1, sanstot.mu.AP2, sanstot.sd.AP2, sanstot.range.AP2, sanstot.mu.AP3, sanstot.sd.AP3, sanstot.range.AP3, sanstot.mu.AP4, sanstot.sd.AP4, sanstot.range.AP4, parentses.mu.dx0, parentses.sd.dx0, parentses.range.dx0, parentses.n.dx0, parentses.mu.dx1,parentses.sd.dx1,parentses.range.dx1, parentses.n.dx1, parentses.mu.AP1,parentses.sd.AP1,parentses.range.AP1,parentses.mu.AP2,parentses.sd.AP2,parentses.range.AP2,parentses.mu.AP3,parentses.sd.AP3,parentses.range.AP3,parentses.mu.AP4,parentses.sd.AP4,parentses.range.AP4,n.dx0, n.dx1, n.AP0, n.AP1, n.AP2, n.AP3, n.AP4, n.fem, n.mal, n.fem.dx0, n.mal.dx0, n.fem.dx1, n.mal.dx1, n.fem.AP0, n.mal.AP0, n.fem.AP1, n.mal.AP1, n.fem.AP2, n.mal.AP2, n.fem.AP3, n.mal.AP3, n.fem.AP4, n.mal.AP4, n.hand0.dx0, n.hand0.dx1, n.hand1.dx0, n.hand1.dx1, n.hand2.dx0, n.hand2.dx1, iq.mu.dx0, iq.sd.dx0, iq.range.dx0, iq.n.dx0, iq.mu.dx1, iq.sd.dx1, iq.range.dx1, iq.n.dx1, file=paste0(transferDir, "/","Demographics_",filetype,".Rdata"))
 
 cat('Done calculating demographics for ', fsfile,'\n')
 
@@ -555,8 +558,8 @@ for(x in (ncol(Covs)+1):ncol(merged_ordered)){
 }
 
 #save results
-save(d.cort,se.cort,low.ci.cort,up.ci.cort,n.controls,n.patients, file=paste0("EffectSizes_SZvHV_",filetype,".Rdata"))
-save(models.cort, file=paste0("Models_SZvHV_",filetype,".Rdata"))
+save(d.cort,se.cort,low.ci.cort,up.ci.cort,n.controls,n.patients, file=paste0(transferDir, "/","EffectSizes_SZvHV_",filetype,".Rdata"))
+save(models.cort, file=paste0(transferDir, "/","Models_SZvHV_",filetype,".Rdata"))
 } else {cat('NOT Running: 1. SZ patients vs controls\n')}
 
 
@@ -619,8 +622,8 @@ for(x in (ncol(Covs)+1):ncol(merged_ordered)){
 }
 
 #save results
-save(d.cort,se.cort,low.ci.cort,up.ci.cort,n.controls,n.patients, file=paste0("EffectSizes_SZvHV_DxBySex_",filetype,".Rdata"))
-save(models.cort, file=paste0("Models_SZvHV_DxBySex_",filetype,".Rdata"))
+save(d.cort,se.cort,low.ci.cort,up.ci.cort,n.controls,n.patients, file=paste0(transferDir, "/","EffectSizes_SZvHV_DxBySex_",filetype,".Rdata"))
+save(models.cort, file=paste0(transferDir, "/","Models_SZvHV_DxBySex_",filetype,".Rdata"))
 } else {cat('NOT Running: 2.1 Diagnosis by Sex interaction (all SZ patients vs controls)\n')}
 
 
@@ -683,8 +686,8 @@ for(x in (ncol(Covs)+1):ncol(merged_ordered)){
 }
 
 #save results
-save(d.cort,se.cort,low.ci.cort,up.ci.cort,n.controls,n.patients, file=paste0("EffectSizes_SZvHV_DxByAge_",filetype,".Rdata"))
-save(models.cort, file=paste0("Models_SZvHV_DxByAge_",filetype,".Rdata"))
+save(d.cort,se.cort,low.ci.cort,up.ci.cort,n.controls,n.patients, file=paste0(transferDir, "/","EffectSizes_SZvHV_DxByAge_",filetype,".Rdata"))
+save(models.cort, file=paste0(transferDir, "/","Models_SZvHV_DxByAge_",filetype,".Rdata"))
 } else {cat('NOT Running: 2.2 Diagnosis by Age interaction (all SZ patients vs controls)\n')}
 
 
@@ -802,8 +805,8 @@ for(APcomparison in c("AP1vsAP0","AP2vsAP0","AP3vsAP0","AP4vsAP0","AP2vsAP1","AP
    }
 
    #save results
-   save(d.cort,se.cort,low.ci.cort,up.ci.cort,n.APlow,n.APhigh, file=paste0("EffectSizes_",APcomparison,sep="_",filetype,".Rdata"))
-   save(models.cort, file=paste0("Models_AP_",APcomparison,sep="_",filetype,".Rdata"))
+   save(d.cort,se.cort,low.ci.cort,up.ci.cort,n.APlow,n.APhigh, file=paste0(transferDir, "/","EffectSizes_",APcomparison,sep="_",filetype,".Rdata"))
+   save(models.cort, file=paste0(transferDir, "/","Models_AP_",APcomparison,sep="_",filetype,".Rdata"))
 
    } else {cat('NOT Running: 3. Antipsychotic (AP) Group Comparison', APcomparison,'\n')}
 
@@ -881,8 +884,8 @@ for(predictor in c("CPZ","AO","DURILL","PANSSTOT","PANSSPOS","PANSSNEG","SAPSTOT
    }
 
    #save results
-   save(r.cort,se.cort,low.ci.cort,up.ci.cort,n.controls,n.patients, file=paste0("EffectSizes_SZ_only_",predictor,"_withAge_",filetype,".Rdata"))
-   save(models.cort, file=paste0("Models_SZ_only_",predictor,"_withAge_",filetype,".Rdata"))
+   save(r.cort,se.cort,low.ci.cort,up.ci.cort,n.controls,n.patients, file=paste0(transferDir, "/","EffectSizes_SZ_only_",predictor,"_withAge_",filetype,".Rdata"))
+   save(models.cort, file=paste0(transferDir, "/","Models_SZ_only_",predictor,"_withAge_",filetype,".Rdata"))
    } else {cat('NOT Running: 4. Regression predictor ', predictor, ' in SZ patients covary for age\n')}
 
 } # end for loop predictor
@@ -989,8 +992,8 @@ for(predictor in c("SANSTOT_CONVERTEASY","CPZ_SANSTOT_CONVERTEASY")){
     }
     
     #save results
-    save(r.cort,se.cort,low.ci.cort,up.ci.cort,n.controls,n.patients, file=paste0("EffectSizes_SZ_only_",predictor,"_withAge_",filetype,".Rdata"))
-    save(models.cort, file=paste0("Models_SZ_only_",predictor,"_withAge_",filetype,".Rdata"))
+    save(r.cort,se.cort,low.ci.cort,up.ci.cort,n.controls,n.patients, file=paste0(transferDir, "/","EffectSizes_SZ_only_",predictor,"_withAge_",filetype,".Rdata"))
+    save(models.cort, file=paste0(transferDir, "/","Models_SZ_only_",predictor,"_withAge_",filetype,".Rdata"))
   } else {cat('NOT Running: 4a. Regression predictor ', predictor, ' in SZ patients covary for age\n')}
   
 } # end for loop predictor 
@@ -1066,8 +1069,8 @@ for(predictor in c("CPZ","AO","DURILL","PANSSTOT","PANSSPOS","PANSSNEG","SAPSTOT
    }
 
    #save results
-   save(r.cort,se.cort,low.ci.cort,up.ci.cort,n.controls,n.patients, file=paste0("EffectSizes_SZ_only_",predictor,"_withoutAge_",filetype,".Rdata"))
-   save(models.cort, file=paste0("Models_SZ_only_",predictor,"_withoutAge_",filetype,".Rdata"))
+   save(r.cort,se.cort,low.ci.cort,up.ci.cort,n.controls,n.patients, file=paste0(transferDir, "/","EffectSizes_SZ_only_",predictor,"_withoutAge_",filetype,".Rdata"))
+   save(models.cort, file=paste0(transferDir, "/","Models_SZ_only_",predictor,"_withoutAge_",filetype,".Rdata"))
    } else {cat('NOT Running: 5. Regression predictor ', predictor, ' in SZ patients without covary for age\n')}
 
 } # end for loop predictor
@@ -1142,8 +1145,8 @@ for(predictor in c("IQ","SZ_only_IQ","HV_only_IQ")){
    }
 
    #save results
-   save(r.cort,se.cort,low.ci.cort,up.ci.cort,n.controls,n.patients, file=paste0("EffectSizes_",predictor,"_withAge_",filetype,".Rdata"))
-   save(models.cort, file=paste0("Models_",predictor,"_withAge_",filetype,".Rdata"))
+   save(r.cort,se.cort,low.ci.cort,up.ci.cort,n.controls,n.patients, file=paste0(transferDir, "/","EffectSizes_",predictor,"_withAge_",filetype,".Rdata"))
+   save(models.cort, file=paste0(transferDir, "/","Models_",predictor,"_withAge_",filetype,".Rdata"))
    } else {cat('NOT Running: 6. Regression predictor ', predictor, ' covary for age\n')}
 
 } # end for loop predictor
@@ -1217,8 +1220,8 @@ for(predictor in c("SZ_only_Age","HV_only_Age")){
     }
     
     #save results
-    save(r.cort,se.cort,low.ci.cort,up.ci.cort,n.males,n.females, file=paste0("EffectSizes_",predictor,"_withSex_",filetype,".Rdata"))
-    save(models.cort, file=paste0("Models_",predictor,"_withSex_",filetype,".Rdata"))
+    save(r.cort,se.cort,low.ci.cort,up.ci.cort,n.males,n.females, file=paste0(transferDir, "/","EffectSizes_",predictor,"_withSex_",filetype,".Rdata"))
+    save(models.cort, file=paste0(transferDir, "/","Models_",predictor,"_withSex_",filetype,".Rdata"))
   } else {cat('NOT Running: 7. Regression predictor ', predictor, ' covary for sex\n')}
   
 } # end for loop predictor
@@ -1300,8 +1303,8 @@ for(x in (ncol(Covs)+1):ncol(merged_ordered)){
 }
 
 #save results
-save(d.cort,se.cort,low.ci.cort,up.ci.cort,n.controls,n.patients, file=paste0("EffectSizes_SZvHV_",filetype,"_ctlWHOLE.Rdata"))
-save(models.cort, file=paste0("Models_SZvHV_",filetype,"_ctlWHOLE.Rdata"))
+save(d.cort,se.cort,low.ci.cort,up.ci.cort,n.controls,n.patients, file=paste0(transferDir, "/","EffectSizes_SZvHV_",filetype,"_ctlWHOLE.Rdata"))
+save(models.cort, file=paste0(transferDir, "/","Models_SZvHV_",filetype,"_ctlWHOLE.Rdata"))
 } else {cat('NOT Running: 1. SZ patients vs controls control for ', whole, '\n')}
 
 
@@ -1364,8 +1367,8 @@ for(x in (ncol(Covs)+1):ncol(merged_ordered)){
 }
 
 #save results
-save(d.cort,se.cort,low.ci.cort,up.ci.cort,n.controls,n.patients, file=paste0("EffectSizes_SZvHV_DxBySex_",filetype,"_ctlWHOLE.Rdata"))
-save(models.cort, file=paste0("Models_SZvHV_DxBySex_",filetype,"_ctlWHOLE.Rdata"))
+save(d.cort,se.cort,low.ci.cort,up.ci.cort,n.controls,n.patients, file=paste0(transferDir, "/","EffectSizes_SZvHV_DxBySex_",filetype,"_ctlWHOLE.Rdata"))
+save(models.cort, file=paste0(transferDir, "/","Models_SZvHV_DxBySex_",filetype,"_ctlWHOLE.Rdata"))
 } else {cat('NOT Running: 2.1 Diagnosis by Sex interaction (all SZ patients vs controls) control for ', whole, '\n')}
 
 
@@ -1428,8 +1431,8 @@ for(x in (ncol(Covs)+1):ncol(merged_ordered)){
 }
 
 #save results
-save(d.cort,se.cort,low.ci.cort,up.ci.cort,n.controls,n.patients, file=paste0("EffectSizes_SZvHV_DxByAge_",filetype,"_ctlWHOLE.Rdata"))
-save(models.cort, file=paste0("Models_SZvHV_DxByAge_",filetype,"_ctlWHOLE.Rdata"))
+save(d.cort,se.cort,low.ci.cort,up.ci.cort,n.controls,n.patients, file=paste0(transferDir, "/","EffectSizes_SZvHV_DxByAge_",filetype,"_ctlWHOLE.Rdata"))
+save(models.cort, file=paste0(transferDir, "/","Models_SZvHV_DxByAge_",filetype,"_ctlWHOLE.Rdata"))
 } else {cat('NOT Running: 2.2 Diagnosis by Age interaction (all SZ patients vs controls) control for ', whole, '\n')}
 
 
@@ -1548,8 +1551,8 @@ for(APcomparison in c("AP1vsAP0","AP2vsAP0","AP3vsAP0","AP4vsAP0","AP2vsAP1","AP
    }
 
    #save results
-   save(d.cort,se.cort,low.ci.cort,up.ci.cort,n.APlow,n.APhigh, file=paste0("EffectSizes_",APcomparison,sep="_",filetype,"_ctlWHOLE.Rdata"))
-   save(models.cort, file=paste0("Models_AP_",APcomparison,sep="_",filetype,"_ctlWHOLE.Rdata"))
+   save(d.cort,se.cort,low.ci.cort,up.ci.cort,n.APlow,n.APhigh, file=paste0(transferDir, "/","EffectSizes_",APcomparison,sep="_",filetype,"_ctlWHOLE.Rdata"))
+   save(models.cort, file=paste0(transferDir, "/","Models_AP_",APcomparison,sep="_",filetype,"_ctlWHOLE.Rdata"))
 
    } else {cat('NOT Running: 3. Antipsychotic (AP) Group Comparison', APcomparison, ' control for ', whole, '\n')}
 
@@ -1564,7 +1567,7 @@ for(APcomparison in c("AP1vsAP0","AP2vsAP0","AP3vsAP0","AP4vsAP0","AP2vsAP1","AP
 cat('Done working on ', fsfile,'\n')
 sink()
 detach(merged_ordered)
-print(readLines(paste0(fsfile,paste0("_",cc,".log"))))
+print(readLines(paste0(transferDir, "/", fsfile,paste0("_",cc,".log"))))
 
 } # end fsfile loop
 
