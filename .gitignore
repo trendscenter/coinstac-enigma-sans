@@ -1,0 +1,6 @@
+**/.Rdata
+**/.log
+test/cache/
+test/remote/
+test/transfer/
+test/output/
