@@ -1,5 +1,4 @@
 #R
-#system('mkdir -p /Users/hgazula/Desktop/PROJECTS/Publications/papers/TheoG.M.vanErp/enigma_cortical/results_cortical/EffectSizes_SZ_only_SANSTOT_withAge_thickness_asis_105ROIs')
 args = commandArgs(trailingOnly=TRUE)
 baseDir = args[1]
 transferDir = args[2]
@@ -11,12 +10,8 @@ pdf(paste(outputDir, 'EffectSizes_SZ_only_SANSTOT_withAge_thickness_asis_105ROIs
 #need the metafor library
 library(metafor)
 
-## Added by Harsh
-#system('mkdir -p /Users/hgazula/Desktop/PROJECTS/Publications/papers/TheoG.M.vanErp/enigma_cortical/data3c/ASRB/ASRB_CortRegs3c')
-#system('mkdir -p /Users/hgazula/Desktop/PROJECTS/Publications/papers/TheoG.M.vanErp/enigma_cortical/data3c/Dublin/Dublin_CortRegs3c')
-## Added by Harsh
-#Read in effect size tables for each group
 
+#Read in effect size tables for each group
 ASRB <- new.env()
 load(paste(baseDir, 'local0', "EffectSizes_SZ_only_SANSTOT_CONVERTEASY_withAge_thickness_asis.Rdata", sep='/'),ASRB)
 ASRB_r.noicv <- get('r.cort',ASRB)
@@ -88,18 +83,19 @@ meta.noicv.h2=rep(0,nrow(r.noicv))
 meta.noicv.npat=rep(0,nrow(r.noicv))
 
 #Run meta-analysis, random-effects
- for(x in 1:nrow(r.noicv)){
+for(x in 1:nrow(r.noicv)){
+   curr_model = rma.uni(ri=r.noicv[x,which(!is.na(r.noicv[x,]))],ni=n.pat[x,which(!is.na(r.noicv[x,]))],measure="COR",control=list(maxiter=10000,stepadj=0.00000001),method="REML") 
 
-   meta.noicv.r[x] = rma.uni(ri=r.noicv[x,which(!is.na(r.noicv[x,]))],ni=n.pat[x,which(!is.na(r.noicv[x,]))],measure="COR",control=list(maxiter=10000,stepadj=0.00000001),method="REML")$b
-   meta.noicv.se[x] = rma.uni(ri=r.noicv[x,which(!is.na(r.noicv[x,]))],ni=n.pat[x,which(!is.na(r.noicv[x,]))],measure="COR",control=list(maxiter=10000,stepadj=0.00000001),method="REML")$se
-   meta.noicv.zval[x] = rma.uni(ri=r.noicv[x,which(!is.na(r.noicv[x,]))],ni=n.pat[x,which(!is.na(r.noicv[x,]))],measure="COR",control=list(maxiter=10000,stepadj=0.00000001),method="REML")$zval
-   meta.noicv.pval[x] = rma.uni(ri=r.noicv[x,which(!is.na(r.noicv[x,]))],ni=n.pat[x,which(!is.na(r.noicv[x,]))],measure="COR",control=list(maxiter=10000,stepadj=0.00000001),method="REML")$pval
-   meta.noicv.ci.lb[x] = rma.uni(ri=r.noicv[x,which(!is.na(r.noicv[x,]))],ni=n.pat[x,which(!is.na(r.noicv[x,]))],measure="COR",control=list(maxiter=10000,stepadj=0.00000001),method="REML")$ci.lb
-   meta.noicv.ci.ub[x] = rma.uni(ri=r.noicv[x,which(!is.na(r.noicv[x,]))],ni=n.pat[x,which(!is.na(r.noicv[x,]))],measure="COR",control=list(maxiter=10000,stepadj=0.00000001),method="REML")$ci.ub
-   meta.noicv.tau2[x] = rma.uni(ri=r.noicv[x,which(!is.na(r.noicv[x,]))],ni=n.pat[x,which(!is.na(r.noicv[x,]))],measure="COR",control=list(maxiter=10000,stepadj=0.00000001),method="REML")$tau2
-   meta.noicv.tause[x] = rma.uni(ri=r.noicv[x,which(!is.na(r.noicv[x,]))],ni=n.pat[x,which(!is.na(r.noicv[x,]))],measure="COR",control=list(maxiter=10000,stepadj=0.00000001),method="REML")$se.tau2
-   meta.noicv.i2[x] = rma.uni(ri=r.noicv[x,which(!is.na(r.noicv[x,]))],ni=n.pat[x,which(!is.na(r.noicv[x,]))],measure="COR",control=list(maxiter=10000,stepadj=0.00000001),method="REML")$I2
-   meta.noicv.h2[x] = rma.uni(ri=r.noicv[x,which(!is.na(r.noicv[x,]))],ni=n.pat[x,which(!is.na(r.noicv[x,]))],measure="COR",control=list(maxiter=10000,stepadj=0.00000001),method="REML")$H2
+   meta.noicv.r[x] = curr_model$b
+   meta.noicv.se[x] = curr_model$se
+   meta.noicv.zval[x] = curr_model$zval
+   meta.noicv.pval[x] = curr_model$pval
+   meta.noicv.ci.lb[x] = curr_model$ci.lb
+   meta.noicv.ci.ub[x] = curr_model$ci.ub
+   meta.noicv.tau2[x] = curr_model$tau2
+   meta.noicv.tause[x] = curr_model$se.tau2
+   meta.noicv.i2[x] = curr_model$I2
+   meta.noicv.h2[x] = curr_model$H2
    meta.noicv.npat[x] = sum(n.pat[x,which(!is.na(r.noicv[x,]))])
    
       #meta.noicv.d[x] = rma.uni(yi=d.noicv[x,which(!is.na(d.noicv[x,]))],sei=se.noicv[x,which(!is.na(d.noicv[x,]))],control=list(maxiter=10000,stepadj=0.00000001),method="REML")$b
