@@ -65,7 +65,7 @@ RUN apt-get update \
 
 # Installing required packages for R
 # https://github.com/glamp/r-docker/blob/master/Dockerfile
-RUN Rscript -e "install.packages(c('ppcor', 'moments', 'matrixStats', 'emmeans'))"
+RUN Rscript -e "install.packages(c('ppcor', 'moments', 'matrixStats', 'emmeans', 'metafor'))"
 
 # Copy the current directory contents into the container
 COPY . /computation

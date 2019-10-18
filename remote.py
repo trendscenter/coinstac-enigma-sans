@@ -1,9 +1,23 @@
 import json
+import os
+import subprocess
 import sys
 from utils import listRecursive
 
 
 def remote_1(args):
+    scriptDir = "/computation/enigma_scripts"
+    scriptName = "metaanalysis_thickness_SANSTOT_asis_105ROIs.R"
+    RScriptDir = "/usr/bin/Rscript"
+    
+    regr_args = [
+        RScriptDir,
+        os.path.join(scriptDir, scriptName), args["state"]["baseDirectory"],
+        args["state"]["transferDirectory"], args["state"]["outputDirectory"]
+    ]
+    subprocess.call(regr_args,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL)
 
     computation_output = {
         "output": "Results files sent to remote",
