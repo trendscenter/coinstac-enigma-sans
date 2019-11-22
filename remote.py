@@ -13,14 +13,14 @@ def remote_1(args):
     regr_args = [
         RScriptDir,
         os.path.join(scriptDir, scriptName), args["state"]["baseDirectory"],
-        args["state"]["transferDirectory"], args["state"]["outputDirectory"]
+        args["state"]["transferDirectory"], args["state"]["transferDirectory"]
     ]
     subprocess.call(regr_args,
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL)
 
     computation_output = {
-        "output": "Results files sent to remote",
+        "output": "Results files sent to remote", # should be a list of files created -ross
         "success": True
     }
 
