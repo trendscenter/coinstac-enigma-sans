@@ -4,4 +4,5 @@ test/cache/
 test/remote/
 test/transfer/
 test/output/
-**/.pdf
+**/*.pdf
+**/*.txt
