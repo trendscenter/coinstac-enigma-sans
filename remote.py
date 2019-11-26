@@ -1,3 +1,4 @@
+import glob
 import json
 import os
 import subprocess
@@ -19,8 +20,19 @@ def remote_1(args):
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL)
 
+    site_dict = dict()
+    for site in args["input"]:
+        logPath = os.path.join(args["state"]["baseDirectory"], site, '*.log')
+        file_dict = dict()
+        for file in glob.glob(logPath):
+            file_name = os.path.split(file)[-1]
+            with open(file, 'r') as f:
+                fileContent = f.read()
+            file_dict[file_name] = fileContent 
+        site_dict[site] = file_dict
+
     computation_output = {
-        "output": "Results files sent to remote", # should be a list of files created -ross
+        "output": site_dict, # should be a list of files created -ross
         "success": True
     }
 

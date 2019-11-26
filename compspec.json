@@ -27,14 +27,8 @@
       }
     },
     "output": {
-      "PC_global": {
-        "type": "array"
-      },
-      "projM_global": {
-        "type" : "array"      
-      },
-      "bkprojM_global" : {
-        "type" : "array"
+      "log": {
+        "type": "text"
       }
     }
   }
