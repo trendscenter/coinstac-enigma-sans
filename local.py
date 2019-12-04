@@ -2,6 +2,7 @@ import json
 import os
 import subprocess
 import sys
+
 from utils import listRecursive
 
 
@@ -16,11 +17,10 @@ def local_1(args):
         os.path.join(scriptDir, scriptName), args["state"]["baseDirectory"],
         args["state"]["transferDirectory"]
     ]
-    
-    subprocess.call(regr_args)
-    #,
-     #               stdout=subprocess.DEVNULL,
-      #              stderr=subprocess.DEVNULL)
+
+    subprocess.call(regr_args,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL)
 
     output_dict = {"computation_phase": "local_1"}
 

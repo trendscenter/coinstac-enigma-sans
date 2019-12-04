@@ -3,6 +3,7 @@ import json
 import os
 import subprocess
 import sys
+
 from utils import listRecursive
 
 
@@ -10,7 +11,7 @@ def remote_1(args):
     scriptDir = "/computation/enigma_scripts"
     scriptName = "metaanalysis_thickness_SANSTOT_asis_105ROIs.R"
     RScriptDir = "/usr/bin/Rscript"
-    
+
     regr_args = [
         RScriptDir,
         os.path.join(scriptDir, scriptName), args["state"]["baseDirectory"],
@@ -28,15 +29,16 @@ def remote_1(args):
             file_name = os.path.split(file)[-1]
             with open(file, 'r') as f:
                 fileContent = f.read()
-            file_dict[file_name] = fileContent 
+            file_dict[file_name] = fileContent
         site_dict[site] = file_dict
 
     computation_output = {
-        "output": site_dict, # should be a list of files created -ross
+        "output": site_dict,  # should be a list of files created -ross
         "success": True
     }
 
     return json.dumps(computation_output)
+
 
 if __name__ == '__main__':
 

@@ -1,14 +1,12 @@
 # R
+options(warn=-1)
 
 # Based on SZ_CortReg from the original cortical analysis Written by TVE, LS, and DPH for the ENIGMA SZ Working Group
 args = commandArgs(trailingOnly=TRUE)
-#baseDir = args[1]
-#transferDir = args[2]
-baseDir = '/computation/test/local0/simulatorRun'
-transferDir = '/computation/test/local0/simulatorRun'
+baseDir = args[1]
+transferDir = args[2]
 
 # will need to source files here with external functions
-options(warn=-1)
 source("/computation/enigma_scripts/PackagesNeeded.R")
 source("/computation/enigma_scripts/FileHeaders.R")
 source("/computation/enigma_scripts/SANSCalcs.R")  # this works!
@@ -349,10 +347,10 @@ for (phenoName in c("Cort", "Surf", "SubCort")) {  #
             } # end for loop on x (brain regions)
                 # save results
                 save(r.cort, se.cort, low.ci.cort, up.ci.cort, n.controls, n.patients, 
-                     file = paste0("EffectSizes_SZ_only_", predictor, 
+                     file = paste0(transferDir, '/', "EffectSizes_SZ_only_", predictor, 
                   "_withSexAge_", WGlobalBrain, phenoName, ".Rdata"))
                 # save(models.cort, file=paste0('Models_SZ_only_',predictor,'_withAge_',filetype,'.Rdata'))
-                save(models.cort, file = paste0("Models_SZ_only_", predictor, "_withSexAge_", WGlobalBrain, phenoName, ".Rdata"))
+                save(models.cort, file = paste0(transferDir, '/', "Models_SZ_only_", predictor, "_withSexAge_", WGlobalBrain, phenoName, ".Rdata"))
         } # end With Global loop   
             
             # detach(merged_ordered)
