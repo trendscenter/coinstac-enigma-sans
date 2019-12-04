@@ -1,17 +1,14 @@
 # R
 
 # Based on SZ_CortReg from the original cortical analysis Written by TVE, LS, and DPH for the ENIGMA SZ Working Group
-
 args = commandArgs(trailingOnly=TRUE)
-baseDir = args[1]
-transferDir = args[2]
-
-print(baseDir)
-print(transferDir)
-setwd(baseDir)
-
+#baseDir = args[1]
+#transferDir = args[2]
+baseDir = '/computation/test/local0/simulatorRun'
+transferDir = '/computation/test/local0/simulatorRun'
 
 # will need to source files here with external functions
+options(warn=-1)
 source("/computation/enigma_scripts/PackagesNeeded.R")
 source("/computation/enigma_scripts/FileHeaders.R")
 source("/computation/enigma_scripts/SANSCalcs.R")  # this works!
@@ -20,11 +17,11 @@ source("/computation/enigma_scripts/RegressFunc.R")
 
 # file names that have to exist this script and the input files
 Rscript = "/computation/enigma_scripts/SZ_SANSReg_20191119.R"
-CortThickFile = "CorticalMeasuresENIGMA_ThickAvg.csv"
-SurfFile = "CorticalMeasuresENIGMA_SurfAvg.csv"
-SubCortFile = "LandRvolumes.csv"
-SANSFile = "SANS.csv"
-CovarFile = "Covariates.csv"
+CortThickFile = file.path(baseDir, "CorticalMeasuresENIGMA_ThickAvg.csv")
+SurfFile = file.path(baseDir, "CorticalMeasuresENIGMA_SurfAvg.csv")
+SubCortFile = file.path(baseDir, "LandRvolumes.csv")
+SANSFile = file.path(baseDir, "SANS.csv")
+CovarFile = file.path(baseDir, "Covariates.csv")
 
 # make sure your working directory is where the .csv files are and this file is in that directory--this is not a complete check!
 if (!file.exists(SANSFile)) {

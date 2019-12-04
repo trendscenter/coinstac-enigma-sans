@@ -5,7 +5,6 @@
 #install.packages("emmeans")
 #install.packages("ppcor")
 #install.packages("matrixStats")
-
 library(ppcor)
-library(lsmeans)
+library(emmeans)
 library(matrixStats)

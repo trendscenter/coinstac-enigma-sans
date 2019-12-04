@@ -17,11 +17,10 @@ def local_1(args):
         args["state"]["transferDirectory"]
     ]
     
-    raise Exception(args["state"]["baseDirectory"])
-
-    subprocess.call(regr_args,
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL)
+    subprocess.call(regr_args)
+    #,
+     #               stdout=subprocess.DEVNULL,
+      #              stderr=subprocess.DEVNULL)
 
     output_dict = {"computation_phase": "local_1"}
 
