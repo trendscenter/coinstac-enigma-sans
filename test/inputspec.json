@@ -1,2 +1,18 @@
-[{"CONFIG_PATH": {"value": "test_config.csv"}},
-{"CONFIG_PATH": {"value": "test_config.csv"}}]
+[{
+  "data": {
+    "value": {
+      "CorticalMeasuresENIGMA_ThickAvg": "CorticalMeasuresENIGMA_ThickAvg.csv",
+      "CorticalMeasuresENIGMA_SurfAvg": "CorticalMeasuresENIGMA_SurfAvg.csv",
+      "Covariats.csv": "Covariates.csv"
+    }
+  }
+},
+{
+  "data": {
+    "value": {
+      "CorticalMeasuresENIGMA_ThickAvg": "CorticalMeasuresENIGMA_ThickAvg.csv",
+      "CorticalMeasuresENIGMA_SurfAvg": "CorticalMeasuresENIGMA_SurfAvg.csv",
+      "Covariats.csv": "Covariates.csv"
+    }
+  }
+}]

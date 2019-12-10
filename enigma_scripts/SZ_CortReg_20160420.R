@@ -33,17 +33,11 @@ library(emmeans)
 args = commandArgs(trailingOnly=TRUE)
 baseDir = args[1]
 transferDir = args[2]
-
-#file1 = file.path(baseDir, "CorticalMeasuresENIGMA_ThickAvg.csv")
-#file2 = file.path(baseDir, "CorticalMeasuresENIGMA_SurfAvg.csv")
-#covarFile = file.path(baseDir, "Covariates.csv")
+file1 = args[3]
+file2 = args[4]
+covarFile = args[5]
 
 setwd(baseDir)
-
-file1 = "CorticalMeasuresENIGMA_ThickAvg.csv"
-file2 = "CorticalMeasuresENIGMA_SurfAvg.csv"
-covarFile = "Covariates.csv"
-
 
 for(cc in c("complete","asis")){
 
