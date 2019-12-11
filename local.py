@@ -11,16 +11,16 @@ def local_1(args):
     scriptName = "SZ_CortReg_20160420.R"
     RScriptDir = "/usr/bin/Rscript"
 
-    key1 = 'CorticalMeasuresENIGMA_ThickAvg'
-    key2 = 'CorticalMeasuresENIGMA_SurfAvg'
-    key3 = 'Covariates'
-    
-    files = [args["input"]["data"][index] for index in range(3)]
-    file_dict = {file.split('-'): file for file in files}
-    
-    file1 = file_dict[key1]
-    file2 = file_dict[key2]
-    file3 = file_dict[key3]
+    fileKeys = ['CorticalMeasuresENIGMA_ThickAvg', 'CorticalMeasuresENIGMA_SurfAvg', 'Covariates']
+    fileMap = {}
+    for i in fileKeys:
+        for j in args["input"]["data"]:
+            if j.find(i) > -1:
+                fileMap[i] = j
+
+    file1 = fileMap['CorticalMeasuresENIGMA_ThickAvg']
+    file2 = fileMap['CorticalMeasuresENIGMA_SurfAvg']
+    file3 = fileMap['Covariates']
 
     regr_args = [
         RScriptDir,

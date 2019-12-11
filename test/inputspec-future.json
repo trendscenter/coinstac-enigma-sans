@@ -1,0 +1,18 @@
+[{
+  "data": {
+    "value": {
+      "CorticalMeasuresENIGMA_ThickAvg": "CorticalMeasuresENIGMA_ThickAvg.csv",
+      "CorticalMeasuresENIGMA_SurfAvg": "CorticalMeasuresENIGMA_SurfAvg.csv",
+      "Covariats.csv": "Covariates.csv"
+    }
+  }
+},
+{
+  "data": {
+    "value": {
+      "CorticalMeasuresENIGMA_ThickAvg": "CorticalMeasuresENIGMA_ThickAvg.csv",
+      "CorticalMeasuresENIGMA_SurfAvg": "CorticalMeasuresENIGMA_SurfAvg.csv",
+      "Covariats.csv": "Covariates.csv"
+    }
+  }
+}]
