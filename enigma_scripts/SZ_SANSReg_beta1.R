@@ -15,11 +15,11 @@ source("/computation/enigma_scripts/RegressFunc.R")
 
 # file names that have to exist this script and the input files
 Rscript = "/computation/enigma_scripts/SZ_SANSReg_20191119.R"
-CortThickFile = file.path(baseDir, "CorticalMeasuresENIGMA_ThickAvg.csv")
-SurfFile = file.path(baseDir, "CorticalMeasuresENIGMA_SurfAvg.csv")
-SubCortFile = file.path(baseDir, "LandRvolumes.csv")
-SANSFile = file.path(baseDir, "SANS.csv")
-CovarFile = file.path(baseDir, "Covariates.csv")
+CortThickFile = file.path(baseDir, args[3])
+SurfFile = file.path(baseDir, args[4])
+SubCortFile = file.path(baseDir, args[5])
+SANSFile = file.path(baseDir, args[6])
+CovarFile = file.path(baseDir, args[7])
 
 # make sure your working directory is where the .csv files are and this file is in that directory--this is not a complete check!
 if (!file.exists(SANSFile)) {
@@ -98,12 +98,12 @@ if (anyDuplicated(SANS[, c("SubjID")]) != 0) {
 }
 
 # check that SANS subjIDs are same as cases in Covs, assuming controls Dx = 0 and cases = 1
-# this might be needed but I don't think it is 
+# this might be needed but I don't think it is
 # pat = which(Covs$Dx == 1)
 # cases = Covs[pat, ]$SubjID
 # S <- SANS$SubjID
-# if(sort(as.character(S)) != sort(as.character(cases))) { 
-# cat(paste0('WARNING: SANS and Covs. have non-matching patient SubjIDs.','\n')) 
+# if(sort(as.character(S)) != sort(as.character(cases))) {
+# cat(paste0('WARNING: SANS and Covs. have non-matching patient SubjIDs.','\n'))
 # cat('Please make sure the patients with Covariates and SANS are equal.','\n') }
 
 # identify the number of sites included in this dataset (if >1)
@@ -136,11 +136,11 @@ for (x in 1:34) {
     names(meanCort)[x] = paste0("M_", tmp[[1]][2], "_", tmp[[1]][3])
 }
 names(meanCort)[35] = "MThickness"
-names(meanCort)[36] = "FullSurfArea"  
+names(meanCort)[36] = "FullSurfArea"
 meanCort = as.data.frame(meanCort)
 
 names(meanSurf)[35] = "MThickness"  # this is not what it was before
-names(meanSurf)[36] = "FullSurfArea"  
+names(meanSurf)[36] = "FullSurfArea"
 meanSurf = as.data.frame(meanSurf)
 
 # drop ICV from Cort and Surf file
@@ -169,7 +169,7 @@ merged_orderedCort = merge(Covs, Cort, by = "SubjID")
 merged_orderedSurf = merge(Covs, Surf, by = "SubjID")
 merged_orderedSubCort = merge(Covs, SubCort, by = "SubjID")
 
-# Check that the number of rows for brains and covars after merging is the same 
+# Check that the number of rows for brains and covars after merging is the same
 #I'm not sure this is necessary, since we need all with SANS and no others
 # if (nrow(Cort) != nrow(merged_ordered)) {
     # # cat(paste0('WARNING: ', fsfile, ' and Covariates.csv have non-matching SubjIDs.','\n')) cat('Please make sure the number of
@@ -202,9 +202,9 @@ swap.merged_orderedSubCort = merged_orderedSubCort
 
 # for(cc in c('complete','asis')){ # find the closing loop for this
 
-cc = "asis"  # for the moment! 
+cc = "asis"  # for the moment!
 
-# this might need to refer to merged_ordered...? 
+# this might need to refer to merged_ordered...?
 if (cc == "complete") {
     # only keep subjects with all volumes
     Cort = Cort[complete.cases(Cort), ]
@@ -216,88 +216,88 @@ if (cc == "complete") {
 L = swap.merged_orderedCort[!is.na(swap.merged_orderedCort[,18]),18]
 cat("Total subjects in Cortical", length(L), "\n")
 
-# for each model: 
-# set the original data frame 
-# select the subjects 
-#loop over the brain measures to: 
-# build the model 
+# for each model:
+# set the original data frame
+# select the subjects
+#loop over the brain measures to:
+# build the model
 # run the model, and  save the results for that model
 
-# for each phenotype (thickness, surf, subcort) 
-    # for each SANS measure (SANSSum, Global measures, Factors) 
+# for each phenotype (thickness, surf, subcort)
+    # for each SANS measure (SANSSum, Global measures, Factors)
         # run Age + Sex + SANS measure
-            # for each brain measure run the model and save it 
-        # run Age + Sex + SANS measure + (mean thick/area/ICV) 
+            # for each brain measure run the model and save it
+        # run Age + Sex + SANS measure + (mean thick/area/ICV)
         # run Age + Sex + SANS measure + IQ --this will be different group of subjects, new data selection!
 
 # need to debug all this to see how to make it parallel across all phenotypes
 
 cat("Starting pheno loop\n")
-for (phenoName in c("Cort", "Surf", "SubCort")) {  # 
-    
+for (phenoName in c("Cort", "Surf", "SubCort")) {  #
+
     # extract data subsets using the phenotypic-specific dataset from above
-    # Use the total SANS we created 
-    
+    # Use the total SANS we created
+
     dataset = paste0("swap.merged_ordered", phenoName)  #Cort,Surf, SubCort
     merged_ordered0 = get(dataset)
-    
+
     merged_ordered_SANSSum <- merged_ordered0[((merged_ordered0$Dx == 1) & !(is.na(merged_ordered0$SANSSum))), ]
-    
+
     merged_ordered_SANSGlobals = merged_ordered_SANSSum  # should be all the same subjects who have a SANS Sum
     merged_ordered_SANSFactors = merged_ordered_SANSSum
-    
+
     # Check nsub with data
     L = merged_ordered_SANSSum[!is.na(merged_ordered_SANSSum[,18]),18]
     cat("Total subjects in SANSSum", length(L), "\n")
-    
-    
+
+
     # code for the globalMeasure to include
     GlobalMeasure= switch(phenoName, "Cort" = "MThickness", "Surf" = "FullSurfArea", "SubCort" = "ICV")
-    
-    
+
+
     for (predictor in c("SANSSum", "SANSGlobals", "SANSFactors")) {  #
-        
+
         predictor_string = PredictCovs(predictor)
-        
+
         data_subset_name = paste0("merged_ordered", sep = "_", predictor)
-        
-        # load data for this pheno and SANS measure 
+
+        # load data for this pheno and SANS measure
         merged_ordered = get(data_subset_name)
-        
+
         # attach(merged_ordered)  # this is critical for building the model from strings, below
-        
+
         cat("dataset and pheno & predictor & global off/on ", cc, phenoName, predictor_string, GlobalMeasure, "\n")
-        
+
         # 1. Regressions predicting phenoName for SZ patients against each SANS measure only covary for Sex and Age
-        # (and site if needed) 
-        
+        # (and site if needed)
+
         # Store models for troubleshooting
         models.cort = NULL  # This will become a list where we store all of the models made by lm
-        
+
         # allocate empty vectors to store adjust effect sizes, se, ci (noicv)
         r.cort = rep(NA, (ncol(merged_ordered) - ncol(Covs)))
         se.cort = rep(NA, (ncol(merged_ordered) - ncol(Covs)))
         low.ci.cort = rep(NA, (ncol(merged_ordered) - ncol(Covs)))
         up.ci.cort = rep(NA, (ncol(merged_ordered) - ncol(Covs)))
-        
+
         # n.controls=rep(NA,(ncol(merged_ordered)-ncol(Covs)))
-        
+
         n.patients = rep(NA, (ncol(merged_ordered) - ncol(Covs)))
-        
+
         if (nrow(merged_ordered) > (n.sites + 5)) {  # do or not do, there is no try
             # this was 3 but it should be 5
-            
+
             for ( WGlobalBrain in c("WG","NotWG")) {  # loop both with and without the global measure covariate
-                
+
             cat("Running: Regression predictor", predictor, " against", phenoName, ",", cc, WGlobalBrain,  "in SZ patients covary for Age and Sex \n")
-            
+
             # set up model variables that don't change in this loop
             if(WGlobalBrain == "WG") {
                 glob=paste0("+",GlobalMeasure, sep="")
             } else {
                 glob=""
             }
-            
+
             site = NULL  # These are just string variables that modify the model in R if there are Site variables in the Covariates.csv file
             if (n.sites != 0) {
                 site = " + "  #Starts the string to add-on Site variables
@@ -309,63 +309,63 @@ for (phenoName in c("Cort", "Surf", "SubCort")) {  #
                     }
                 }
             }  # end site construction
-            
+
             # Loop through and perform each regression
-            # number of brain measures is the total columns subtracting out Covs and SANS 
+            # number of brain measures is the total columns subtracting out Covs and SANS
             Npheno = ncol(merged_ordered) - ncol(Covs) - ncol(SANS)
             Startcol = ncol(Covs) + 1
             Endcol = Startcol + Npheno -1 # this should vary between cortical and subcortical
-            
-            for (x in (Startcol:Endcol)) { # make this startcol to end col! 
+
+            for (x in (Startcol:Endcol)) { # make this startcol to end col!
                 # do the model for each brain measure (column)
-                
+
                 pheno = merged_ordered[!is.na(merged_ordered[, x]), x]  #Check to make sure there are observations for a given structure
-                
+
                 # check if the phenotype is singular after NA removal
                 if (length(pheno) == 0) {
                   next  # Skip to the next measure if there are no observations
                 }
-                
+
                 # Run the modelfor each x
                 IndVar = merged_ordered[, x]
-                
+
                 thisformula = as.formula(paste("IndVar ~ ", predictor_string, " + Age + Sex", glob, site, sep = ""))
                 tmp=lm(thisformula, data=merged_ordered)
-         
+
                 models.cort[[x - ncol(Covs)]] = tmp  #Store the model fit for future reference
-                
+
                 # subjects can be dropped if they are missing so we can get the precise number of controls/patients for each region tested
                 # n.controls[x - ncol(Covs)] = length(which(tmp$model[, 2] == 0))
                 # n.patients[x - ncol(Covs)] = length(which(tmp$model[, 2] == 1))
                 n.controls = 0 # none used in this analysis
                 n.patients = length(tmp$model[,2]) # Does this always work?? It *should* be the num of subjects included in the model
-                
+
                 # not entirely sure what this is??
                 partcor.i <- pcor.test(tmp$model[1], tmp$model[, 2], tmp$model[, c(3:ncol(tmp$model))])
                 r.cort[x - ncol(Covs)] = partcor.i[, 1]
-                
+
             } # end for loop on x (brain regions)
                 # save results
-                save(r.cort, se.cort, low.ci.cort, up.ci.cort, n.controls, n.patients, 
-                     file = paste0(transferDir, '/', "EffectSizes_SZ_only_", predictor, 
+                save(r.cort, se.cort, low.ci.cort, up.ci.cort, n.controls, n.patients,
+                     file = paste0(transferDir, '/', "EffectSizes_SZ_only_", predictor,
                   "_withSexAge_", WGlobalBrain, phenoName, ".Rdata"))
                 # save(models.cort, file=paste0('Models_SZ_only_',predictor,'_withAge_',filetype,'.Rdata'))
                 save(models.cort, file = paste0(transferDir, '/', "Models_SZ_only_", predictor, "_withSexAge_", WGlobalBrain, phenoName, ".Rdata"))
-        } # end With Global loop   
-            
+        } # end With Global loop
+
             # detach(merged_ordered)
-            
+
         } #end do or not do based on sample size
-            
+
         else  # not running that regression
             {
             cat("NOT Running: Regression predictor ", predictor, ",", cc, glob, " in SZ patients covary for age + Sex \n")
-        }  
-        
+        }
+
         }  #  end predictor loop, regression 1
-        
-        
+
+
     } # end phenoName loop for debugging
 
-  
+
 #### TVE ##########

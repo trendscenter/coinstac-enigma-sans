@@ -12,10 +12,28 @@ def local_1(args):
     scriptName = "SZ_SANSReg_beta1.R"
     RScriptDir = "/usr/bin/Rscript"
 
+    fileKeys = [
+        'CorticalMeasuresENIGMA_ThickAvg',
+        'CorticalMeasuresENIGMA_SurfAvg',
+        'LandRvolumes',
+        'SANS',
+        'Covariates'
+    ]
+    fileMap = {}
+    for i in fileKeys:
+        for j in args["input"]["data"]:
+            if j.find(i) > -1:
+                fileMap[i] = j
+
+    file1 = fileMap[fileKeys[0]]
+    file2 = fileMap[fileKeys[1]]
+    file3 = fileMap[fileKeys[2]]
+    file4 = fileMap[fileKeys[3]]
+    file5 = fileMap[fileKeys[4]]
     regr_args = [
         RScriptDir,
         os.path.join(scriptDir, scriptName), args["state"]["baseDirectory"],
-        args["state"]["transferDirectory"]
+        args["state"]["transferDirectory"], file1, file2, file3, file4, file5
     ]
 
     subprocess.call(regr_args,

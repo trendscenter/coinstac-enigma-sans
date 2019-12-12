@@ -36,7 +36,6 @@ def remote_1(args):
         "output": site_dict,  # should be a list of files created -ross
         "success": True
     }
-
     return json.dumps(computation_output)
 
 

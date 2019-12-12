@@ -2,7 +2,9 @@
 **/.log
 test/cache/
 test/remote/
+test/input/remote/
 test/transfer/
 test/output/
 **/*.pdf
 **/*.txt
+**/.DS_Store/
