@@ -20,7 +20,7 @@ def remote_1(args):
     subprocess.call(regr_args,
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL)
-
+    os.system("cp -rf " + args["state"]["baseDirectory"] + "/* " + args["state"]["transferDirectory"]) 
     site_dict = dict()
     for site in args["input"]:
         logPath = os.path.join(args["state"]["baseDirectory"], site, '*.log')
