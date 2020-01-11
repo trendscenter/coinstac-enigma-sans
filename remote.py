@@ -9,7 +9,7 @@ from utils import listRecursive
 
 def remote_1(args):
     scriptDir = "/computation/enigma_scripts"
-    scriptName = "metaanalysis_thickness_SANSTOT_asis_105ROIs.R"
+    scriptName = "metaanalysis_AllComps2020.R"
     RScriptDir = "/usr/bin/Rscript"
 
     regr_args = [
