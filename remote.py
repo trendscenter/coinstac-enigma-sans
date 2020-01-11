@@ -17,27 +17,27 @@ def remote_1(args):
     regr_args = [
         RScriptDir,
         os.path.join(scriptDir, scriptName), args["state"]["baseDirectory"],
-        args["state"]["transferDirectory"], args["state"]["transferDirectory"]
+        args["state"]["transferDirectory"], args["state"]["outputDirectory"], str(numSites)
     ]
     
     subprocess.call(regr_args,
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL)
     
-    os.system("cp -rf " + args["state"]["baseDirectory"] + "/* " + args["state"]["transferDirectory"]) 
-    site_dict = dict()
-    for site in args["input"]:
-        logPath = os.path.join(args["state"]["baseDirectory"], site, '*.log')
-        file_dict = dict()
-        for file in glob.glob(logPath):
-            file_name = os.path.split(file)[-1]
-            with open(file, 'r') as f:
-                fileContent = f.read()
-            file_dict[file_name] = fileContent
-        site_dict[site] = file_dict
+    # os.system("cp -rf " + args["state"]["baseDirectory"] + "/* " + args["state"]["transferDirectory"]) 
+    # site_dict = dict()
+    # for site in args["input"]:
+    #     logPath = os.path.join(args["state"]["baseDirectory"], site, '*.log')
+    #     file_dict = dict()
+    #     for file in glob.glob(logPath):
+    #         file_name = os.path.split(file)[-1]
+    #         with open(file, 'r') as f:
+    #             fileContent = f.read()
+    #         file_dict[file_name] = fileContent
+    #     site_dict[site] = file_dict
 
     computation_output = {
-        "output": site_dict,  # should be a list of files created -ross
+        # should be a list of files created -ross
         "success": True
     }
     return json.dumps(computation_output)

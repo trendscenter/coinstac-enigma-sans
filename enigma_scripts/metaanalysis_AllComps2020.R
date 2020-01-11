@@ -1,21 +1,18 @@
 #R
+options(warn=-1)
+
 args = commandArgs(trailingOnly=TRUE)
 baseDir = args[1]
 transferDir = args[2]
 outputDir = args[3]
-NumDir=args[4]
-
-
-outputDir="."  # for the moment!
+NumDir=strtoi(args[4])
 
 setwd(outputDir)
-
-NumDir=2  # this should one of the args 
 
 pdf(paste(outputDir, 'SANSoutputs.pdf', sep='/'))
 
 # do we need a sink file here too? 
-sink(paste(outputDir,"Meta.txt", sep='/'), split=TRUE)
+sink(paste(outputDir, "Meta.txt", sep='/'), split=TRUE)
 
 #need the metafor library
 library(metafor)
@@ -44,21 +41,21 @@ for (phenoName in c("Cort", "Surf", "SubCort")) {  # brain measure type loop
       Modelf = paste0("Models_SZ_",predictor,"_withSexAge_",WCov,"_", phenoName,".Rdata")
       
      # output file
-      Outfile=paste0("MetaAnalysis_SZ_",predictor,"_withSexAge_",WCov,phenoName,".txt")
+      Outfile=paste0(outputDir, '/', "MetaAnalysis_SZ_",predictor,"_withSexAge_",WCov,phenoName,".txt")
       
       nsites = 0 # how many sites, for each analysis
       
       for (site in 0:(NumDir-1)) {
         
-        sitedir=paste0("site",site)
+        sitedir=paste0("local",site)
         
-        if (!dir.exists(sitedir)) {
+        if (!dir.exists(paste0(baseDir, '/', sitedir))) {
           # site failed to respond
           cat(sitedir,"does not exist \n")
           
         } else { # site exists, keep going
           
-          setwd(sitedir)  # this may not be the way to do it? 
+          setwd(paste0(baseDir, '/', sitedir))  # this may not be the way to do it? 
           
           # open the files and read them in for the effect sizes and the # subjects included
           # if successful, add to the count of nsites for that analysis
