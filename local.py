@@ -9,7 +9,7 @@ from utils import listRecursive
 def local_1(args):
     # Running the first script
     scriptDir = "/computation/enigma_scripts"
-    scriptName = "SZ_SANSReg_beta1.R"
+    scriptName = "SZ_SANSReg_2019AllComps.R"
     RScriptDir = "/usr/bin/Rscript"
 
     fileKeys = [
@@ -24,7 +24,7 @@ def local_1(args):
         for j in args["input"]["data"]:
             if j.find(i) > -1:
                 fileMap[i] = j
-
+                
     file1 = fileMap[fileKeys[0]]
     file2 = fileMap[fileKeys[1]]
     file3 = fileMap[fileKeys[2]]
@@ -35,7 +35,6 @@ def local_1(args):
         os.path.join(scriptDir, scriptName), args["state"]["baseDirectory"],
         args["state"]["transferDirectory"], file1, file2, file3, file4, file5
     ]
-
     subprocess.call(regr_args,
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL)
