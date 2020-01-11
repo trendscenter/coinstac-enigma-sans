@@ -14,7 +14,7 @@ source("/computation/enigma_scripts/RegressFunc.R")
 # source('./WriteRaw.R')
 
 # file names that have to exist this script and the input files
-Rscript = "/computation/enigma_scripts/SZ_SANSReg_20191119.R"
+Rscript = "/computation/enigma_scripts/SZ_SANSReg_beta1.R"
 CortThickFile = file.path(baseDir, args[3])
 SurfFile = file.path(baseDir, args[4])
 SubCortFile = file.path(baseDir, args[5])
