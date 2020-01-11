@@ -11,15 +11,19 @@ def remote_1(args):
     scriptDir = "/computation/enigma_scripts"
     scriptName = "metaanalysis_AllComps2020.R"
     RScriptDir = "/usr/bin/Rscript"
+    
+    numSites = len(args["input"])
 
     regr_args = [
         RScriptDir,
         os.path.join(scriptDir, scriptName), args["state"]["baseDirectory"],
         args["state"]["transferDirectory"], args["state"]["transferDirectory"]
     ]
+    
     subprocess.call(regr_args,
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL)
+    
     os.system("cp -rf " + args["state"]["baseDirectory"] + "/* " + args["state"]["transferDirectory"]) 
     site_dict = dict()
     for site in args["input"]:
