@@ -5,19 +5,17 @@ args = commandArgs(trailingOnly=TRUE)
 baseDir = args[1]
 transferDir = args[2]
 outputDir = args[3]
-NumDir=strtoi(args[4])
+NumDir = strtoi(args[4])
 
-setwd(outputDir)
+
+#need the metafor library
+suppressMessages(library(metafor))
 
 pdf(paste(outputDir, 'SANSoutputs.pdf', sep='/'))
 
 # do we need a sink file here too? 
 sink(paste(outputDir, "Meta.txt", sep='/'), split=TRUE)
 
-#need the metafor library
-library(metafor)
-
-#
 # for every site, for every analysis
 # Read in effect size tables for each group
 
@@ -55,17 +53,17 @@ for (phenoName in c("Cort", "Surf", "SubCort")) {  # brain measure type loop
           
         } else { # site exists, keep going
           
-          setwd(paste0(baseDir, '/', sitedir))  # this may not be the way to do it? 
+          #setwd(paste0(baseDir, '/', sitedir))  # this may not be the way to do it? 
           
           # open the files and read them in for the effect sizes and the # subjects included
           # if successful, add to the count of nsites for that analysis
           
-          if(!file.exists(Effectsf) || !file.exists(Modelf)) {
+          if(!file.exists(paste0(baseDir, '/', sitedir, '/', Effectsf)) || !file.exists(paste0(baseDir, '/', sitedir, '/', Modelf))) {
             cat(sitedir, "does not have the needed files for", Effectsf)
           } else {
             # read the files--puts n.patients, models.cort, and r.cort into memory
-            load(Effectsf)
-            load(Modelf)
+            load(paste0(baseDir, '/', sitedir, '/', Effectsf))
+            load(paste0(baseDir, '/', sitedir, '/', Modelf))
             
             # for the first site that has data, save the variables
             # for remaining sites, cbind it
@@ -84,7 +82,7 @@ for (phenoName in c("Cort", "Surf", "SubCort")) {  # brain measure type loop
             
           }
           
-          setwd("..")  # back to the original directory
+#          setwd("..")  # back to the original directory
           
         } # end if site exists loop
         
@@ -140,7 +138,7 @@ for (phenoName in c("Cort", "Surf", "SubCort")) {  # brain measure type loop
         outmat=cbind(meta.noicv.r,meta.noicv.se,meta.noicv.zval,meta.noicv.pval,meta.noicv.ci.lb,meta.noicv.ci.ub,meta.noicv.tau2,meta.noicv.tause,meta.noicv.i2,meta.noicv.h2,meta.noicv.npat,fdr.p,fdr.p.mean)
         
         
-        write.table(outmat,file=paste(outputDir, Outfile, sep='/'),quote=F,sep="\t", row.names=TRUE, col.names=TRUE)
+        write.table(outmat,file=Outfile, quote=F,sep="\t", row.names=TRUE, col.names=TRUE)
         
         
       } else {
@@ -155,4 +153,4 @@ for (phenoName in c("Cort", "Surf", "SubCort")) {  # brain measure type loop
 } # end pheno loop
 
 sink()
-dev.off() # close pdf
+invisible(dev.off()) # close pdf

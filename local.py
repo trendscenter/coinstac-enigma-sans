@@ -7,24 +7,20 @@ from utils import listRecursive
 
 
 def local_1(args):
-    # Running the first script
     scriptDir = "/computation/enigma_scripts"
     scriptName = "SZ_SANSReg_2019AllComps.R"
     RScriptDir = "/usr/bin/Rscript"
 
     fileKeys = [
-        'CorticalMeasuresENIGMA_ThickAvg',
-        'CorticalMeasuresENIGMA_SurfAvg',
-        'LandRvolumes',
-        'SANS',
-        'Covariates'
+        'CorticalMeasuresENIGMA_ThickAvg', 'CorticalMeasuresENIGMA_SurfAvg',
+        'LandRvolumes', 'SANS', 'Covariates'
     ]
     fileMap = {}
     for i in fileKeys:
         for j in args["input"]["data"]:
             if j.find(i) > -1:
                 fileMap[i] = j
-                
+
     file1 = fileMap[fileKeys[0]]
     file2 = fileMap[fileKeys[1]]
     file3 = fileMap[fileKeys[2]]
