@@ -30,10 +30,9 @@ def remote_1(args):
         site_list
     ]
 
-    subprocess.call(regr_args)
-    # ,
-    #                 stdout=subprocess.DEVNULL,
-    #                 stderr=subprocess.DEVNULL)
+    subprocess.call(regr_args,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL)
 
     # Copying local results to transfer directory
     os.system("cp -rf " + baseDir + "/* " + transferDir)
