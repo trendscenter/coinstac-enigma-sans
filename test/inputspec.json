@@ -3,6 +3,8 @@
     "value": [
       "CorticalMeasuresENIGMA_ThickAvg.csv",
       "CorticalMeasuresENIGMA_SurfAvg.csv",
+			"LandRvolumes.csv",
+			"SANS.csv",
       "Covariates.csv"
 		]
   }
@@ -12,6 +14,8 @@
     "value": [
       "CorticalMeasuresENIGMA_ThickAvg.csv",
       "CorticalMeasuresENIGMA_SurfAvg.csv",
+			"LandRvolumes.csv",
+			"SANS.csv",
       "Covariates.csv"
 		]
   }

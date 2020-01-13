@@ -24,6 +24,7 @@ RUN useradd docker \
 
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends \
+	apt-utils \
 		ed \
 		less \
 		locales \
@@ -45,7 +46,7 @@ ENV LANG en_US.UTF-8
 RUN echo "deb http://http.debian.net/debian sid main" > /etc/apt/sources.list.d/debian-unstable.list \
         && echo 'APT::Default-Release "testing";' > /etc/apt/apt.conf.d/default
 
-ENV R_BASE_VERSION 3.6.1
+ENV R_BASE_VERSION 3.6.2
 
 ## Now install R and littler, and create a link for littler in /usr/local/bin
 RUN apt-get update \
@@ -65,7 +66,7 @@ RUN apt-get update \
 
 # Installing required packages for R
 # https://github.com/glamp/r-docker/blob/master/Dockerfile
-RUN Rscript -e "install.packages(c('ppcor', 'moments', 'matrixStats', 'emmeans', 'metafor'))"
+RUN Rscript -e "install.packages(c('ppcor', 'moments', 'matrixStats', 'emmeans', 'metafor', 'sjstats'))"
 
 # Copy the current directory contents into the container
 COPY . /computation
