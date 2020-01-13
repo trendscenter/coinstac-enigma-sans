@@ -3,9 +3,8 @@ options(warn=-1)
 
 args = commandArgs(trailingOnly=TRUE)
 baseDir = args[1]
-transferDir = args[2]
-outputDir = args[3]
-NumDir = strtoi(args[4])
+outputDir = args[2]
+NumDir = strtoi(args[3])
 
 
 #need the metafor library

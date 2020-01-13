@@ -19,7 +19,7 @@ def remote_1(args):
 
     regr_args = [
         RScriptDir,
-        os.path.join(scriptDir, scriptName), baseDir, transferDir, outputDir,
+        os.path.join(scriptDir, scriptName), baseDir, outputDir,
         str(numSites)
     ]
 
@@ -27,17 +27,11 @@ def remote_1(args):
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL)
 
-    # os.system("cp -rf " + args["state"]["baseDirectory"] + "/* " + args["state"]["transferDirectory"])
-    # site_dict = dict()
-    # for site in args["input"]:
-    #     logPath = os.path.join(args["state"]["baseDirectory"], site, '*.log')
-    #     file_dict = dict()
-    #     for file in glob.glob(logPath):
-    #         file_name = os.path.split(file)[-1]
-    #         with open(file, 'r') as f:
-    #             fileContent = f.read()
-    #         file_dict[file_name] = fileContent
-    #     site_dict[site] = file_dict
+    # Copying local results to transfer directory
+    os.system("cp -rf " + baseDir + "/* " + transferDir)
+    
+    # Copying meta analysis results to transfer directory
+    os.system("cp -rf " + outputDir + "/* " + transferDir)
 
     computation_output = {
         "output": {},
