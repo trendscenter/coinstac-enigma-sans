@@ -4,8 +4,9 @@ options(warn=-1)
 args = commandArgs(trailingOnly=TRUE)
 baseDir = args[1]
 outputDir = args[2]
-NumDir = strtoi(args[3])
+site_list = args[3]
 
+dat = readLines(site_list)
 
 #need the metafor library
 suppressMessages(library(metafor))
@@ -42,9 +43,9 @@ for (phenoName in c("Cort", "Surf", "SubCort")) {  # brain measure type loop
       
       nsites = 0 # how many sites, for each analysis
       
-      for (site in 0:(NumDir-1)) {
+      for (sitedir in dat) {
         
-        sitedir=paste0("local",site)
+        #sitedir=paste0("local",site)
         
         if (!dir.exists(paste0(baseDir, '/', sitedir))) {
           # site failed to respond
