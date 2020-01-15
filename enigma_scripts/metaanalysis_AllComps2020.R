@@ -89,7 +89,7 @@ for (phenoName in c("Cort", "Surf", "SubCort")) {  # brain measure type loop
       } # end  site loop
       
       
-      if(nsites > 0) {# do the meta analysis and save the results
+      if(nsites > 1) {# do the meta analysis and save the results
         
         #initialize meta analysis structures
         meta.noicv.r=rep(0,nrow(r_eff))
@@ -142,7 +142,7 @@ for (phenoName in c("Cort", "Surf", "SubCort")) {  # brain measure type loop
         
         
       } else {
-        cat("no sites for this analysis! \n")
+        cat("not enough sites for this analysis! \n")
       }
       
       # clear npat_all, r_eff, and models_all for the enxt analysis
