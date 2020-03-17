@@ -1,0 +1,35 @@
+{
+  "meta": {
+    "name": "ENIGMA in COINSTAC demo",
+    "id": "enigma-sans",
+    "version": "v1.0.0",
+    "repository": "",
+    "description": "a test for decentralized PCA"
+  },
+  "computation": {
+    "type": "docker",
+    "dockerImage": "enigma-sans",
+    "command": [
+      "python",
+      "\/computation\/local.py"
+    ],
+    "remote": {
+      "type": "docker",
+      "dockerImage": "enigma-sans",
+      "command": [
+        "python",
+        "\/computation\/remote.py"
+      ]
+    },
+    "input": {
+      "samples": {
+        "type": "array"
+      }
+    },
+    "output": {
+      "log": {
+        "type": "text"
+      }
+    }
+  }
+}
