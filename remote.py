@@ -15,11 +15,7 @@ def remote_1(args):
     transferDir = args["state"]["transferDirectory"]
     outputDir = args["state"]["outputDirectory"]
 
-    site_list = os.path.join(outputDir, "site_list.txt")
-
-    with open(site_list, 'w') as fh:
-        for site in args["input"]:
-            fh.write('%s\n' % site)
+    site_list = ','.join(args["input"].keys())
 
     regr_args = [
         RScriptDir,

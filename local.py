@@ -8,12 +8,12 @@ from utils import listRecursive
 
 def local_1(args):
     scriptDir = "/computation/enigma_scripts"
-    scriptName = "SZ_SANSReg_2019AllComps.R"
+    scriptName = "SZ_SANSReg_03092020AllComps.R"
     RScriptDir = "/usr/bin/Rscript"
 
     fileKeys = [
         'CorticalMeasuresENIGMA_ThickAvg', 'CorticalMeasuresENIGMA_SurfAvg',
-        'LandRvolumes', 'SANS', 'Covariates'
+        'LandRvolumes', 'SANS', 'Covariates', 'CohortInfo'
     ]
     fileMap = {}
     for i in fileKeys:
@@ -26,10 +26,11 @@ def local_1(args):
     file3 = fileMap[fileKeys[2]]
     file4 = fileMap[fileKeys[3]]
     file5 = fileMap[fileKeys[4]]
+    file6 = fileMap[fileKeys[5]]
     regr_args = [
         RScriptDir,
         os.path.join(scriptDir, scriptName), args["state"]["baseDirectory"],
-        args["state"]["transferDirectory"], file1, file2, file3, file4, file5
+        args["state"]["transferDirectory"], file1, file2, file3, file4, file5, file6
     ]
     subprocess.call(regr_args,
                     stdout=subprocess.DEVNULL,
