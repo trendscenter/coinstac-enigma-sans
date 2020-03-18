@@ -21,7 +21,6 @@ def remote_1(args):
         RScriptDir,
         os.path.join(scriptDir, scriptName), baseDir, outputDir, site_list
     ]
-
     subprocess.call(regr_args,
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL)
