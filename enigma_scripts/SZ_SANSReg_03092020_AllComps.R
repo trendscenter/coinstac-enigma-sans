@@ -37,8 +37,8 @@ outputdir=paste0(transferDir, "/output_sz_sans_factors_", cohort, "/")
 dir.create(outputdir, showWarnings = F)
 
 # save CohortInfo to outputdir
-save(CohortInfo, file=paste0(transferDir, "CohortInfo_output.Rdata"))
-write.table(CohortInfo, file=paste0(transferDir, "CohortInfo_output.csv"), sep=",",  row.names=FALSE, col.names=FALSE, quote = FALSE)
+save(CohortInfo, file=paste(transferDir, "CohortInfo_output.Rdata", sep = "/"))
+write.table(CohortInfo, file=paste(transferDir, "CohortInfo_output.csv", sep = "/"), sep=",",  row.names=FALSE, col.names=FALSE, quote = FALSE)
 
 # this still needs a log file
 #sink(paste0(outputdir, "SANSscriptOut.txt"), split=TRUE)
