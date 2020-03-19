@@ -32,13 +32,14 @@ def local_1(args):
         os.path.join(scriptDir, scriptName), args["state"]["baseDirectory"],
         args["state"]["transferDirectory"], file1, file2, file3, file4, file5, file6
     ]
-    # subprocess.call(regr_args,
-    #                 stdout=subprocess.DEVNULL,
-    #                 stderr=subprocess.DEVNULL)
+
     result = subprocess.run(
         regr_args,
         text=True,
         capture_output=True)
+        
+    if result.returncode != 0:
+        raise Exception("R script failed: " + result.stderr + "\n" + result.stdout)
 
     output_dict = {"computation_phase": "local_1"}
 
