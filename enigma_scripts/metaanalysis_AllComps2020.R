@@ -7,26 +7,9 @@ args = commandArgs(trailingOnly=TRUE)
 baseDir = args[1]
 outputDir = args[2]
 siteList = as.list(strsplit(args[3], ",")[[1]])
-#curDir="./"
-curDir=getwd()
 
 # get the list of input directories for meta-analysis - these are the output directories from each of the sites
 inputDirs<-list.files(path=".", pattern="^output")
-# get the number of input directories for the meta-analysis
-# NumDir<-NROW(inputDirs)
-
-# create the output directory for the meta-anlaysis results
-# outputDir="./results_meta_analysis"  # for the moment!
-
-if (file.exists(outputDir)){
-  #setwd(file.path(curDir, outputDir))
-} else {
-  #dir.create(file.path(curDir, outputDir))
-  #setwd(file.path(curDir, outputDir))
-}
-
-# now defined above
-#NumDir=2  # this should one of the args
 
 # create an analysis log file
 sink(paste(outputDir,"MetaAnalysisLog.txt", sep='/'), split=TRUE)
@@ -34,7 +17,6 @@ sink(paste(outputDir,"MetaAnalysisLog.txt", sep='/'), split=TRUE)
 # load the metafor library
 library(metafor)
 
-#
 # for every site, for every analysis
 # Read in effect size tables for each group
 
@@ -63,16 +45,10 @@ for (phenoName in c("Cort", "Surf", "SubCort")) {  # brain measure type loop
                        "SANSFac1wSANSMAP", "SANSFac2wSANSMAP", "SANSFac3wSANSMAP", "SANSFac4wSANSMAP", "SANSFac5wSANSMAP")) {  # All the possible predictors!
         for ( WCov in c("NoCovs","WG", "WSum", "WIQ", "WCPZ", "WAO", "WAP")) {  # loop for other covariates: Global brain, IQ, CPZ equiv, AO, AP group
 
-      # generate the input file names
-      #cat(paste(predictor, " ", WCov,"\n"))
-
       Effectsf= paste0("EffectSizes_SZ_only_",predictor,"_withSexAge_",WCov,phenoName,".Rdata") # this depends on the previous output
       Modelf = paste0("Models_SZ_",predictor,"_withSexAge_",WCov,"_", phenoName,".Rdata")
 
-      #cat(paste(Effectsf,"\n"))
-      #cat(paste(Modelf, "\n"))
-
-     # output file
+      # output file
       Outfile=paste0("/MetaAnalysis_SZ_",predictor,"_withSexAge_",WCov,phenoName,".txt")
 
       cat(paste("Creating: ", Outfile,"\n"))
@@ -176,7 +152,8 @@ for (phenoName in c("Cort", "Surf", "SubCort")) {  # brain measure type loop
                     quote=F,sep="\t", row.names=TRUE, col.names=TRUE)
 
       } else {
-        cat("no sites for this analysis! \n")
+        message("no sites for this analysis! \n")
+        quit(status=1)
       }
 
       # clear npat_all, r_eff, and models_all for the next analysis
@@ -211,11 +188,9 @@ for (dependent_variable in  c("SANSSum", "SANSMAP", "SANSEXP",
       }
     else { # read the files--puts the npat and effect size into memory
       load(paste(siteDir, ModelF, sep='/'))  # puts genderMod model in memory
-      #cat(paste(siteDir, ModelF, sep='/'))
 
       # for the first site that has data, save the variables
       # for remaining sites, cbind it
-
       if(!(exists("n.pat_all"))) {
         n.pat_all = n.patients # number of participants in the model
         Sex_d_all=cohen_d  # Sex Effect as Cohen's d
@@ -234,7 +209,6 @@ for (dependent_variable in  c("SANSSum", "SANSMAP", "SANSEXP",
         } # end what to do in a site
       } # done with that site
       nsites=nsites+1
-      #setwd("..") # back to base
     # } # end file.exists
   } # end for loop siteNames - to load data from all sites
 

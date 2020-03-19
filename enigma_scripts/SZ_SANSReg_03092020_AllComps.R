@@ -19,16 +19,18 @@ SANSFile = file.path(baseDir, args[6])
 CovarFile = file.path(baseDir, args[7])
 CohortInfoFile = file.path(baseDir, args[8])
 if (!file.exists(CohortInfoFile)) {
-  stop("CohortInfo.csv file is missing  please make sure this R script is in the directory with the csv files, and your R working directory is set to that directory")
+  message("CohortInfo.csv file is missing  please make sure this R script is in the directory with the csv files, and your R working directory is set to that directory")
+  quit(status=1)
 }
+
 CohortInfo <- read.csv(CohortInfoFile, header=F) # Read in the Cohort Information, this csv file should contain: "COHORT Acronym, analyst name, analyst e-mail address".
 CohortName=CohortInfo[1,1]
 analyst=CohortInfo[1,2]
 analyst_email=CohortInfo[1,3]
+
 # Replace possible spaces in the cohort name by underscores
 cohort <- gsub(" ", "_", CohortName)
-#save(CohortInfo, file="CohortInfo_output.Rdata")
-#write.table(CohortInfo, file="CohortInfo_output.csv", sep=",",  row.names=FALSE, col.names=FALSE, quote = FALSE)
+
 # Present a message that the script is running
 cat(paste0("Your Cohort Name is: ", cohort," - Starting analysis...\n"))
 
@@ -39,9 +41,6 @@ dir.create(outputdir, showWarnings = F)
 # save CohortInfo to outputdir
 save(CohortInfo, file=paste(transferDir, "CohortInfo_output.Rdata", sep = "/"))
 write.table(CohortInfo, file=paste(transferDir, "CohortInfo_output.csv", sep = "/"), sep=",",  row.names=FALSE, col.names=FALSE, quote = FALSE)
-
-# this still needs a log file
-#sink(paste0(outputdir, "SANSscriptOut.txt"), split=TRUE)
 
 # Create .log file and redirect all message output to this file
 messages <- file(paste0(outputdir, "SANSscriptOut.txt"), open="wt")
@@ -70,7 +69,8 @@ library(emmeans)
 
 # make sure your working directory is where the .csv files are and this file is in that directory--this is not a complete check!
 if (!file.exists(SANSFile)) {
-    stop("SANS.csv file is missing  please make sure this R script is in the directory with the csv files, and your R working directory is set to that directory")
+    message("SANS.csv file is missing  please make sure this R script is in the directory with the csv files, and your R working directory is set to that directory")
+    quit(status=1)
 }
 
 # read and check all files before starting on regressions etc.
@@ -85,74 +85,74 @@ SANS = read.csv(SANSFile, header = T)
 
 cortcolind = match(CortCols, names(Cort))
 if (length(which(is.na(cortcolind))) > 0) {
-    stop(
+    message(
         "At least one of the required columns in your Cortical thickness measures file is missing. Make sure that the column names are spelled exactly as listed in the protocol\n"
     )
+    quit(status=1)
 }
 
 cortcolind = match(SurfCols, names(Surf))
 if (length(which(is.na(cortcolind))) > 0) {
-    stop(
+    message(
         "At least one of the required columns in your Cortical surfare area measures file is missing. Make sure that the column names are spelled exactly as listed in the protocol\n"
     )
+    quit(status=1)
 }
 
 cortcolind = match(SubCortCols, names(SubCort))
 if (length(which(is.na(cortcolind))) > 0) {
-    stop(
+    message(
         "At least one of the required columns in your LandRvolumesn.csv file is missing. Make sure that the column names are spelled exactly as listed in the protocol\n"
     )
+    quit(status=1)
 }
 
 # Check that all of the required columns are present (Covs)
 
 colind = match(Covcols, names(Covs))
 if (length(which(is.na(colind))) > 0) {
-    stop(
+    message(
         "At least one of the required columns in your Covariates.csv file is missing. Make sure that the column names are spelled exactly as listed:\nIt is possible that the problem column(s) is: ",
         Covcols[which(is.na(colind))]
     )
+    quit(status=1)
 }
 
 # Check that all of the required columns are present (SANS)
 
 colind = match(SANScols, names(SANS))
 if (length(which(is.na(colind))) > 0) {
-    stop(
+    message(
         "At least one of the required columns in your SANS.csv file is missing. Make sure that the column names are spelled exactly as listed:\nIt is possible that the problem column(s) is: ",
         SANScols[which(is.na(colind))]
     )
+    quit(status=1)
 }
 
 # Check for duplicated SubjIDs that may cause issues with merging data sets.
 if (anyDuplicated(Cort[, c("SubjID")]) != 0) {
-    stop(paste0("You have duplicate SubjIDs in your cortical measures file.\nMake sure there are no repeat SubjIDs.\n"))
+    message(paste0("You have duplicate SubjIDs in your cortical measures file.\nMake sure there are no repeat SubjIDs.\n"))
+    quit(status=1)
 }
 if (anyDuplicated(Surf[, c("SubjID")]) != 0) {
-    stop(paste0("You have duplicate SubjIDs in your cortical measures file.\nMake sure there are no repeat SubjIDs.\n"))
+    message(paste0("You have duplicate SubjIDs in your cortical measures file.\nMake sure there are no repeat SubjIDs.\n"))
+    quit(status=1)
 }
 
 if (anyDuplicated(SubCort[, c("SubjID")]) != 0) {
-    stop(paste0("You have duplicate SubjIDs in your subcortical volumes file.\nMake sure there are no repeat SubjIDs.\n"))
+    message(paste0("You have duplicate SubjIDs in your subcortical volumes file.\nMake sure there are no repeat SubjIDs.\n"))
+    quit(status=1)
 }
 
 if (anyDuplicated(Covs[, c("SubjID")]) != 0) {
-    stop("You have duplicate SubjIDs in your Covariates.csv file.\nMake sure there are no repeat SubjIDs.")
+    message("You have duplicate SubjIDs in your Covariates.csv file.\nMake sure there are no repeat SubjIDs.")
+    quit(status=1)
 }
 
 if (anyDuplicated(SANS[, c("SubjID")]) != 0) {
-    stop("You have duplicate SubjIDs in your SANS.csv file.\nMake sure there are no repeat SubjIDs.")
+    message("You have duplicate SubjIDs in your SANS.csv file.\nMake sure there are no repeat SubjIDs.")
+    quit(status=1)
 }
-
-# check that SANS subjIDs are same as cases in Covs, assuming controls Dx = 0 and cases = 1
-# this might be needed but I don't think it is
-#pat = which(Covs$Dx == 1)
-#cases = Covs[pat, ]$SubjID
-#S <- SANS$SubjID
-#if(sort(as.character(S)) != sort(as.character(cases))) {
-#cat(paste0('WARNING: SANS and Covs. have non-matching patient SubjIDs.','\n'))
-#cat('Please make sure the patients with Covariates and SANS are equal.','\n') }
-#}
 
 # identify the number of sites included in this dataset (if >1)
 n.covs <- ncol(Covs) - 1  #Total number of covariates, -1 removes the SubjectID column
@@ -169,23 +169,24 @@ n.mal=length(which(Covs$Sex==1))   # Men
 
 #Check that Sex was coded properly
 if((n.fem + n.mal) != length(Covs$Sex)){
-    stop('Did you remember to code the Sex covariate as Males=1 and Females=2?\n')
+    message('Did you remember to code the Sex covariate as Males=1 and Females=2?\n')
+    quit(status=1)
 }
 
 # calculate the SANS factorizations here and add to the SANS matrix--external function
-
 SANS = CalcSans(SANS)
 
 #### calculate mean values --This could be looped...
-
 meanCort = NULL
 meanSurf = NULL
+
 # calculate means across hemispheres
 for (x in 2:35) {  # This depends on the FS file format and cortical ROI labels
 
     meanCort = c(meanCort, ((Cort[, x] + Cort[x + 34])/2))
     meanSurf = c(meanSurf, ((Surf[, x] + Cort[x + 34])/2))
 }
+
 meanCort = c(meanCort, ((Cort[, 70] + Cort[71])/2))
 meanCort = c(meanCort, ((Cort[, 72] + Cort[73])))
 meanSurf = c(meanSurf, ((Surf[, 70] + Surf[71])/2))
@@ -195,6 +196,7 @@ for (x in 1:34) {
     tmp = strsplit(names(meanCort)[x], "_")
     names(meanCort)[x] = paste0("M_", tmp[[1]][2], "_", tmp[[1]][3])
 }
+
 names(meanCort)[35] = "MThickness"
 names(meanCort)[36] = "FullSurfArea"
 meanCort = as.data.frame(meanCort)
@@ -229,16 +231,7 @@ merged_orderedCort = merge(Covs, Cort, by = "SubjID")
 merged_orderedSurf = merge(Covs, Surf, by = "SubjID")
 merged_orderedSubCort = merge(Covs, SubCort, by = "SubjID")
 
-# Check that the number of rows for brains and covars after merging is the same
-#I'm not sure this is necessary, since we need all with SANS and no others
-# if (nrow(Cort) != nrow(merged_ordered)) {
-    # # cat(paste0('WARNING: ', fsfile, ' and Covariates.csv have non-matching SubjIDs.','\n')) cat('Please make sure the number of
-    # subjects in your merged data set are as expected.','\n') cat(paste0('The number of SubjIDs in ', fsfile, ' is: ',nrow(Cort),'\n'))
-    # cat("The number of SubjIDs in the merged_ordered Cortical Thickness data set is: ", nrow(merged_orderedCort), "\n")
-#}
-
 # merge in the SANS data at the end but don't throw out the controls until we know we aren't doing case/control analyses
-
 merged_orderedCort = merge(merged_orderedCort, SANS, by = "SubjID", all.x = TRUE)
 merged_orderedSurf = merge(merged_orderedSurf, SANS, by = "SubjID", all.x = TRUE)
 merged_orderedSubCort = merge(merged_orderedSubCort, SANS, by = "SubjID", all.x = TRUE)
@@ -282,10 +275,6 @@ for (phenoName in c("SANSSum", "SANSMAP", "SANSEXP",
 
   genderMod = lm(sexform, data=merged_orderedSubCort)
 
-  # save the model, the number of men/women included
-  #"d.cort"      "low.ci.cort" "n.controls"  "n.patients"  "se.cort"     "up.ci.cort"
-  # TVE: we should probably added the estimated means / least square means to the table also
-
   # pull marginal means
   em<-emmeans(genderMod, "Sex")
   emd<-data.frame(em)
@@ -297,6 +286,7 @@ for (phenoName in c("SANSSum", "SANSMAP", "SANSEXP",
   n.patients = nobs(genderMod)
   n.mal = length(which(genderMod$model$`factor(Sex)`==1))
   n.fem = n.patients - n.mal
+
   # Gender Effect
   Sex_eff = coef(summary(genderMod))[2]  # regression coeff
   tvalue=coef(summary(genderMod))[2, 't value']
@@ -306,6 +296,7 @@ for (phenoName in c("SANSSum", "SANSMAP", "SANSEXP",
   CI=CI1(ES = cohen_d,se = se)
   low.ci=CI[1]
   up.ci=CI[2]
+
   # Age Effect
   # get the t, turn it into an r (slightly biased if not normally distributed )
   Age_eff = coef(summary(genderMod))[3]  # regression coeff
@@ -327,14 +318,12 @@ for (phenoName in c("SANSSum", "SANSMAP", "SANSEXP",
   save(genderMod, sexform, emd, m.adjusted.mean, f.adjusted.mean, m.se, f.se, n.patients, n.mal, n.fem, Sex_eff, tvalue, pvalue,
        cohen_d, se, low.ci, up.ci, file = paste0(outputdir,"EffectSizes_SZ_only_Gender_withAge_on_",
                                                  phenoName, ".Rdata"))
-
   # save Age effects
   tvalue=tvalue_age
   pvalue=pvalue_age
   save(genderMod, sexform, emd, m.adjusted.mean, f.adjusted.mean, m.se, f.se, n.patients, n.mal, n.fem, Age_eff, tvalue, pvalue,
        r, file = paste0(outputdir,"EffectSizes_SZ_only_Age_withSex_on_",
                                                  phenoName, ".Rdata"))
-
   }
 
 # cross correlation of all SANS data and factors here, save to file!
@@ -374,7 +363,7 @@ for (phenoName in c("Cort", "Surf", "SubCort")) {  # brain measure type loop
     # extract data subsets using the phenotypic-specific dataset from above
     # Use the total SANS we created
 
-    dataset = paste0("swap.merged_ordered", phenoName)  # get the right one: Cort,Surf, SubCort
+    dataset = paste0("swap.merged_ordered", phenoName)  # get the right one: Cort, Surf, SubCort
     merged_ordered0 = get(dataset)
 
     merged_ordered_SANSSum <- merged_ordered0[((merged_ordered0$Dx == 1) & !(is.na(merged_ordered0$SANSSum))), ]
@@ -444,30 +433,24 @@ for (phenoName in c("Cort", "Surf", "SubCort")) {  # brain measure type loop
                if ( (Cov == "IQ") && (length(Covs$IQ[Covs$Dx == 1 & !is.na(Covs$IQ)]) ) > 19 ) {
                  Cov_tmp<-paste0("W",Cov)
                  WCovs<-c(WCovs,Cov_tmp)
-                 #cat(WCovs,"\n")
                  }
                else if( (Cov == "CPZ") && (length(Covs$CPZ[Covs$Dx == 1 & !is.na(Covs$CPZ)]) ) > 19 ) {
                  Cov_tmp<-paste0("W",Cov)
                  WCovs<-c(WCovs,Cov_tmp)
-                 #cat(WCovs,"\n")
                }
                else if ( (Cov == "AO") && (length(Covs$AO[Covs$Dx == 1 & !is.na(Covs$AO)]) ) > 19 ) {
                  Cov_tmp=paste0("W",Cov)
                  WCovs=c(WCovs,Cov_tmp)
-                 #cat(WCovs,"\n")
                }
                else if ( (Cov == "AP") && (length(Covs$AP[Covs$Dx == 1 & !is.na(Covs$AP)]) ) > 19 ) {
                  Cov_tmp<-paste0("W",Cov)
                  WCovs<-c(WCovs,Cov_tmp)
-                 #cat(WCovs,"\n")
                }
                else {
                  cat(paste0("Less than 20 subjects with Covariate: ", Cov, "\n"))
                }
-               #cat(WCovs,"\n")
              }
 
-            #for ( WCov in c("NoCovs","WG", "WSum", "WIQ", "WCPZ", "WAO", "WAP")) {  # loop for other covariates: Global brain, IQ, CPZ equiv, AO, AP group
             for ( WCov in WCovs ) {
             cat(paste0("Running: Regression predictor ", predictor, " against ", phenoName, ", ", cc, ", in SZ patients covary for ", WCov, ", Age and Sex \n"))
 
@@ -505,15 +488,10 @@ for (phenoName in c("Cort", "Surf", "SubCort")) {  # brain measure type loop
                 r.cort = matrix(NA, nrow= Npheno+1, ncol = NumPredict)
                 n.patients = matrix(NA, nrow = Npheno+1, ncol=1)
 
-                # se.cort = NULL
-                # low.ci.cort = NULL
-                # up.ci.cort = NULL
-
                 # Loop through and perform each regression
 
             for (x in (Startcol:Endcol)) {
                 # do the model for each brain measure (column)
-
                 pheno = merged_ordered[!is.na(merged_ordered[, x]), x]  #Check to make sure there are observations for a given structure
 
                 # check if the phenotype is singular after NA removal
@@ -529,10 +507,6 @@ for (phenoName in c("Cort", "Surf", "SubCort")) {  # brain measure type loop
                 tmp=lm(thisformula, data=merged_ordered)
 
                 models.cort[[x - ncol(Covs)]] = tmp  #Store the model fit for future reference
-
-                # subjects can be dropped if they are missing so we can get the precise number of controls/patients for each region tested
-                # n.controls[x - ncol(Covs)] = length(which(tmp$model[, 2] == 0))
-                # n.patients[x - ncol(Covs)] = length(which(tmp$model[, 2] == 1))
 
                 n.controls = 0 # none used in this analysis
                 n.patients[x-ncol(Covs)] = length(tmp$model[,2]) # this works!
