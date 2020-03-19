@@ -5,10 +5,8 @@ rm(list=ls())
 
 args = commandArgs(trailingOnly=TRUE)
 baseDir = args[1]
-transferDir = args[2]
-outputDir = args[3]
-siteList = as.list(strsplit(args[4], ",")[[1]])
-
+outputDir = args[2]
+siteList = as.list(strsplit(args[3], ",")[[1]])
 #curDir="./"
 curDir=getwd()
 

@@ -58,10 +58,10 @@ cat("Started the analysis on ", format(Sys.time(),usetz = TRUE), ".\n\n", sep = 
 
 # will need to source files here with external functions
 
-source("./FileHeaders.R")
-source("./SANSCalcs.R")
-source("./RegressFunc.R")
-source('./WriteRaw.R')
+source("./enigma_scripts/FileHeaders.R")
+source("./enigma_scripts/SANSCalcs.R")
+source("./enigma_scripts/RegressFunc.R")
+source('./enigma_scripts/WriteRaw.R')
 library(emmeans)
 
 # file names that have to exist this script and the input files

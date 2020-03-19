@@ -8,7 +8,7 @@ from utils import listRecursive
 
 def local_1(args):
     scriptDir = "/computation/enigma_scripts"
-    scriptName = "SZ_SANSReg_03092020AllComps.R"
+    scriptName = "SZ_SANSReg_03092020_AllComps.R"
     RScriptDir = "/usr/bin/Rscript"
 
     fileKeys = [
@@ -32,9 +32,13 @@ def local_1(args):
         os.path.join(scriptDir, scriptName), args["state"]["baseDirectory"],
         args["state"]["transferDirectory"], file1, file2, file3, file4, file5, file6
     ]
-    subprocess.call(regr_args,
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL)
+    # subprocess.call(regr_args,
+    #                 stdout=subprocess.DEVNULL,
+    #                 stderr=subprocess.DEVNULL)
+    result = subprocess.run(
+        regr_args,
+        text=True,
+        capture_output=True)
 
     output_dict = {"computation_phase": "local_1"}
 

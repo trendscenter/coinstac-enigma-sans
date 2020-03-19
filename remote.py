@@ -21,9 +21,12 @@ def remote_1(args):
         RScriptDir,
         os.path.join(scriptDir, scriptName), baseDir, outputDir, site_list
     ]
-    subprocess.call(regr_args,
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL)
+    # subprocess.call(regr_args,
+    #                 stdout=subprocess.DEVNULL,
+    #                 stderr=subprocess.DEVNULL)
+    result = subprocess.run(regr_args,
+                text=True,
+                capture_output=True)
 
     # Copying local results to transfer directory
     os.system("cp -rf " + baseDir + "/* " + transferDir)
