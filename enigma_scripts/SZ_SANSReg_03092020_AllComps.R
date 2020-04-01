@@ -39,8 +39,8 @@ outputdir=paste0(transferDir, "/output_sz_sans_factors_", cohort, "/")
 dir.create(outputdir, showWarnings = F)
 
 # save CohortInfo to outputdir
-save(CohortInfo, file=paste(transferDir, "CohortInfo_output.Rdata", sep = "/"))
-write.table(CohortInfo, file=paste(transferDir, "CohortInfo_output.csv", sep = "/"), sep=",",  row.names=FALSE, col.names=FALSE, quote = FALSE)
+save(CohortInfo, file=paste(outputdir, "CohortInfo_output.Rdata", sep = "/"))
+write.table(CohortInfo, file=paste(outputdir, "CohortInfo_output.csv", sep = "/"), sep=",",  row.names=FALSE, col.names=FALSE, quote = FALSE)
 
 # Create .log file and redirect all message output to this file
 messages <- file(paste0(outputdir, "SANSscriptOut.txt"), open="wt")
