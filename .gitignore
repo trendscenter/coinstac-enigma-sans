@@ -1,5 +1,6 @@
 **/.Rdata
 **/.log
+**/.DS_Store
 test/cache/
 test/remote/
 test/transfer/

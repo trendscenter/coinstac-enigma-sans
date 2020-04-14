@@ -8,18 +8,16 @@ from utils import listRecursive
 
 def remote_1(args):
     scriptDir = "/computation/enigma_scripts"
-    scriptName = "metaanalysis_AllComps2020.R"
+    scriptName = "metaanalysis_AllComps2020_V3.R"
     RScriptDir = "/usr/bin/Rscript"
 
     baseDir = args["state"]["baseDirectory"]
     transferDir = args["state"]["transferDirectory"]
     outputDir = args["state"]["outputDirectory"]
 
-    site_list = ','.join(args["input"].keys())
-
     regr_args = [
         RScriptDir,
-        os.path.join(scriptDir, scriptName), baseDir, outputDir, site_list
+        os.path.join(scriptDir, scriptName), baseDir, outputDir, json.dumps(args["input"])
     ]
 
     result = subprocess.run(regr_args,

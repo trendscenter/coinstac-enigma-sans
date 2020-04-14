@@ -2,13 +2,14 @@ import json
 import os
 import subprocess
 import sys
+import csv
 
 from utils import listRecursive
 
 
 def local_1(args):
     scriptDir = "/computation/enigma_scripts"
-    scriptName = "SZ_SANSReg_03092020_AllComps.R"
+    scriptName = "SZ_SANSReg_004102020_AllComps.R"
     RScriptDir = "/usr/bin/Rscript"
 
     fileKeys = [
@@ -37,11 +38,18 @@ def local_1(args):
         regr_args,
         text=True,
         capture_output=True)
-        
+
     if result.returncode != 0:
         raise Exception("R script failed: " + result.stderr + "\n" + result.stdout)
 
-    output_dict = {"computation_phase": "local_1"}
+    with open(os.path.join(args["state"]["baseDirectory"], "CohortInfo.csv")) as f:
+        reader = csv.reader(f)
+        cohortDirectory = "output_sz_sans_factors_" + next(reader)[0].replace(" ", "_")
+
+    output_dict = {
+      "cohortDirectory": cohortDirectory,
+      "computation_phase": "local_1"
+    }
 
     computation_output = {"output": output_dict}
 

@@ -10,7 +10,6 @@ args = commandArgs(trailingOnly=TRUE)
 baseDir = args[1]
 transferDir = args[2]
 
-
 # First get cohort information. It not present, stop.
 CortThickFile = file.path(baseDir, args[3])
 SurfFile = file.path(baseDir, args[4])
@@ -18,6 +17,7 @@ SubCortFile = file.path(baseDir, args[5])
 SANSFile = file.path(baseDir, args[6])
 CovarFile = file.path(baseDir, args[7])
 CohortInfoFile = file.path(baseDir, args[8])
+
 if (!file.exists(CohortInfoFile)) {
   message("CohortInfo.csv file is missing  please make sure this R script is in the directory with the csv files, and your R working directory is set to that directory")
   quit(status=1)
@@ -42,11 +42,10 @@ dir.create(outputdir, showWarnings = F)
 save(CohortInfo, file=paste(outputdir, "CohortInfo_output.Rdata", sep = "/"))
 write.table(CohortInfo, file=paste(outputdir, "CohortInfo_output.csv", sep = "/"), sep=",",  row.names=FALSE, col.names=FALSE, quote = FALSE)
 
-# Create .log file and redirect all message output to this file
-messages <- file(paste0(outputdir, "SANSscriptOut.txt"), open="wt")
-sink(messages, type="message")
-sink(messages, type="output", split=TRUE)
+# this still needs a log file
+#sink(paste0(outputdir,"SANSscriptOut.txt"), split=TRUE)
 
+# Create .log file and redirect all message output to this file
 cat("ENIGMA-SCHIZOPHRENIA SANS FACTORS ANALYSES LOG FILE\n")
 cat("Test Phase Feb 2020\n")
 cat(paste0("Name of the cohort: ", cohort, "\n"))
@@ -154,6 +153,16 @@ if (anyDuplicated(SANS[, c("SubjID")]) != 0) {
     quit(status=1)
 }
 
+# check that SANS subjIDs are same as cases in Covs, assuming controls Dx = 0 and cases = 1
+# this might be needed but I don't think it is
+#pat = which(Covs$Dx == 1)
+#cases = Covs[pat, ]$SubjID
+#S <- SANS$SubjID
+#if(sort(as.character(S)) != sort(as.character(cases))) {
+#cat(paste0('WARNING: SANS and Covs. have non-matching patient SubjIDs.','\n'))
+#cat('Please make sure the patients with Covariates and SANS are equal.','\n') }
+#}
+
 # identify the number of sites included in this dataset (if >1)
 n.covs <- ncol(Covs) - 1  #Total number of covariates, -1 removes the SubjectID column
 n.sites <- n.covs - 15  #Find the number of site variables, subtract the number of predictirs (Dx, Age, Sex etc.) from n.covs
@@ -174,9 +183,11 @@ if((n.fem + n.mal) != length(Covs$Sex)){
 }
 
 # calculate the SANS factorizations here and add to the SANS matrix--external function
+
 SANS = CalcSans(SANS)
 
 #### calculate mean values --This could be looped...
+
 meanCort = NULL
 meanSurf = NULL
 
@@ -184,7 +195,7 @@ meanSurf = NULL
 for (x in 2:35) {  # This depends on the FS file format and cortical ROI labels
 
     meanCort = c(meanCort, ((Cort[, x] + Cort[x + 34])/2))
-    meanSurf = c(meanSurf, ((Surf[, x] + Cort[x + 34])/2))
+    meanSurf = c(meanSurf, ((Surf[, x] + Surf[x + 34])/2))
 }
 
 meanCort = c(meanCort, ((Cort[, 70] + Cort[71])/2))
@@ -195,6 +206,8 @@ meanSurf = c(meanSurf, ((Surf[, 72] + Surf[73])))
 for (x in 1:34) {
     tmp = strsplit(names(meanCort)[x], "_")
     names(meanCort)[x] = paste0("M_", tmp[[1]][2], "_", tmp[[1]][3])
+    tmp2 = strsplit(names(meanSurf)[x], "_")
+    names(meanSurf)[x] = paste0("M_", tmp2[[1]][2], "_", tmp2[[1]][3])
 }
 
 names(meanCort)[35] = "MThickness"
@@ -231,7 +244,16 @@ merged_orderedCort = merge(Covs, Cort, by = "SubjID")
 merged_orderedSurf = merge(Covs, Surf, by = "SubjID")
 merged_orderedSubCort = merge(Covs, SubCort, by = "SubjID")
 
+# Check that the number of rows for brains and covars after merging is the same
+#I'm not sure this is necessary, since we need all with SANS and no others
+# if (nrow(Cort) != nrow(merged_ordered)) {
+    # # cat(paste0('WARNING: ', fsfile, ' and Covariates.csv have non-matching SubjIDs.','\n')) cat('Please make sure the number of
+    # subjects in your merged data set are as expected.','\n') cat(paste0('The number of SubjIDs in ', fsfile, ' is: ',nrow(Cort),'\n'))
+    # cat("The number of SubjIDs in the merged_ordered Cortical Thickness data set is: ", nrow(merged_orderedCort), "\n")
+#}
+
 # merge in the SANS data at the end but don't throw out the controls until we know we aren't doing case/control analyses
+
 merged_orderedCort = merge(merged_orderedCort, SANS, by = "SubjID", all.x = TRUE)
 merged_orderedSurf = merge(merged_orderedSurf, SANS, by = "SubjID", all.x = TRUE)
 merged_orderedSubCort = merge(merged_orderedSubCort, SANS, by = "SubjID", all.x = TRUE)
@@ -274,6 +296,10 @@ for (phenoName in c("SANSSum", "SANSMAP", "SANSEXP",
   sexform = as.formula(paste0(phenoName_string, " ~ factor(Sex) + Age ", site))
 
   genderMod = lm(sexform, data=merged_orderedSubCort)
+
+  # save the model, the number of men/women included
+  #"d.cort"      "low.ci.cort" "n.controls"  "n.patients"  "se.cort"     "up.ci.cort"
+  # TVE: we should probably added the estimated means / least square means to the table also
 
   # pull marginal means
   em<-emmeans(genderMod, "Sex")
@@ -318,12 +344,14 @@ for (phenoName in c("SANSSum", "SANSMAP", "SANSEXP",
   save(genderMod, sexform, emd, m.adjusted.mean, f.adjusted.mean, m.se, f.se, n.patients, n.mal, n.fem, Sex_eff, tvalue, pvalue,
        cohen_d, se, low.ci, up.ci, file = paste0(outputdir,"EffectSizes_SZ_only_Gender_withAge_on_",
                                                  phenoName, ".Rdata"))
+
   # save Age effects
   tvalue=tvalue_age
   pvalue=pvalue_age
   save(genderMod, sexform, emd, m.adjusted.mean, f.adjusted.mean, m.se, f.se, n.patients, n.mal, n.fem, Age_eff, tvalue, pvalue,
        r, file = paste0(outputdir,"EffectSizes_SZ_only_Age_withSex_on_",
                                                  phenoName, ".Rdata"))
+
   }
 
 # cross correlation of all SANS data and factors here, save to file!
@@ -363,7 +391,7 @@ for (phenoName in c("Cort", "Surf", "SubCort")) {  # brain measure type loop
     # extract data subsets using the phenotypic-specific dataset from above
     # Use the total SANS we created
 
-    dataset = paste0("swap.merged_ordered", phenoName)  # get the right one: Cort, Surf, SubCort
+    dataset = paste0("swap.merged_ordered", phenoName)  # get the right one: Cort,Surf, SubCort
     merged_ordered0 = get(dataset)
 
     merged_ordered_SANSSum <- merged_ordered0[((merged_ordered0$Dx == 1) & !(is.na(merged_ordered0$SANSSum))), ]
@@ -433,24 +461,30 @@ for (phenoName in c("Cort", "Surf", "SubCort")) {  # brain measure type loop
                if ( (Cov == "IQ") && (length(Covs$IQ[Covs$Dx == 1 & !is.na(Covs$IQ)]) ) > 19 ) {
                  Cov_tmp<-paste0("W",Cov)
                  WCovs<-c(WCovs,Cov_tmp)
+                 #cat(WCovs,"\n")
                  }
                else if( (Cov == "CPZ") && (length(Covs$CPZ[Covs$Dx == 1 & !is.na(Covs$CPZ)]) ) > 19 ) {
                  Cov_tmp<-paste0("W",Cov)
                  WCovs<-c(WCovs,Cov_tmp)
+                 #cat(WCovs,"\n")
                }
                else if ( (Cov == "AO") && (length(Covs$AO[Covs$Dx == 1 & !is.na(Covs$AO)]) ) > 19 ) {
                  Cov_tmp=paste0("W",Cov)
                  WCovs=c(WCovs,Cov_tmp)
+                 #cat(WCovs,"\n")
                }
                else if ( (Cov == "AP") && (length(Covs$AP[Covs$Dx == 1 & !is.na(Covs$AP)]) ) > 19 ) {
                  Cov_tmp<-paste0("W",Cov)
                  WCovs<-c(WCovs,Cov_tmp)
+                 #cat(WCovs,"\n")
                }
                else {
                  cat(paste0("Less than 20 subjects with Covariate: ", Cov, "\n"))
                }
+               #cat(WCovs,"\n")
              }
 
+            #for ( WCov in c("NoCovs","WG", "WSum", "WIQ", "WCPZ", "WAO", "WAP")) {  # loop for other covariates: Global brain, IQ, CPZ equiv, AO, AP group
             for ( WCov in WCovs ) {
             cat(paste0("Running: Regression predictor ", predictor, " against ", phenoName, ", ", cc, ", in SZ patients covary for ", WCov, ", Age and Sex \n"))
 
@@ -488,10 +522,15 @@ for (phenoName in c("Cort", "Surf", "SubCort")) {  # brain measure type loop
                 r.cort = matrix(NA, nrow= Npheno+1, ncol = NumPredict)
                 n.patients = matrix(NA, nrow = Npheno+1, ncol=1)
 
+                # se.cort = NULL
+                # low.ci.cort = NULL
+                # up.ci.cort = NULL
+
                 # Loop through and perform each regression
 
             for (x in (Startcol:Endcol)) {
                 # do the model for each brain measure (column)
+
                 pheno = merged_ordered[!is.na(merged_ordered[, x]), x]  #Check to make sure there are observations for a given structure
 
                 # check if the phenotype is singular after NA removal
@@ -507,6 +546,10 @@ for (phenoName in c("Cort", "Surf", "SubCort")) {  # brain measure type loop
                 tmp=lm(thisformula, data=merged_ordered)
 
                 models.cort[[x - ncol(Covs)]] = tmp  #Store the model fit for future reference
+
+                # subjects can be dropped if they are missing so we can get the precise number of controls/patients for each region tested
+                # n.controls[x - ncol(Covs)] = length(which(tmp$model[, 2] == 0))
+                # n.patients[x - ncol(Covs)] = length(which(tmp$model[, 2] == 1))
 
                 n.controls = 0 # none used in this analysis
                 n.patients[x-ncol(Covs)] = length(tmp$model[,2]) # this works!
