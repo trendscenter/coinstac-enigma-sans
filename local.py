@@ -42,7 +42,7 @@ def local_1(args):
     if result.returncode != 0:
         raise Exception("R script failed: " + result.stderr + "\n" + result.stdout)
 
-    with open(os.path.join(args["state"]["baseDirectory"], "CohortInfo.csv")) as f:
+    with open(os.path.join(args["state"]["baseDirectory"], file6)) as f:
         reader = csv.reader(f)
         cohortDirectory = "output_sz_sans_factors_" + next(reader)[0].replace(" ", "_")
 
