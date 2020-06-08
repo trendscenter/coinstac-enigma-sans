@@ -210,6 +210,7 @@ for (phenoName in c("Cort", "Surf", "SubCort")) {  # brain measure type loop
 
       } else {
         cat("no sites for this analysis! \n")
+        dev.off()
       }
 
       # clear npat_all, r_eff, and models_all for the next analysis
