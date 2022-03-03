@@ -9,12 +9,12 @@ from utils import listRecursive
 
 def local_1(args):
     scriptDir = "/computation/enigma_scripts"
-    scriptName = "SZ_SANSReg_004102020_AllComps.R"
+    scriptName = "SZ_PANSSReg_02072021_AllComps.R"
     RScriptDir = "/usr/bin/Rscript"
 
     fileKeys = [
         'CorticalMeasuresENIGMA_ThickAvg', 'CorticalMeasuresENIGMA_SurfAvg',
-        'LandRvolumes', 'SANS', 'Covariates', 'CohortInfo'
+        'LandRvolumes', 'PANSS', 'Covariates', 'CohortInfo'
     ]
     fileMap = {}
     for i in fileKeys:
@@ -40,12 +40,12 @@ def local_1(args):
         capture_output=True)
 
     if result.returncode != 0:
-        raise Exception("R script failed: " + result.stderr + "\n" + result.stdout)
+        raise Exception(result)
 
     with open(os.path.join(args["state"]["baseDirectory"], file6)) as f:
         reader = csv.reader(f)
-        cohortDirectory = "output_sz_sans_factors_" + next(reader)[0].replace(" ", "_")
-
+        cohortDirectory = "output_sz_panss_factors_" + next(reader)[0].replace(" ", "_")
+    raise Exception(result)
     output_dict = {
       "cohortDirectory": cohortDirectory,
       "computation_phase": "local_1"

@@ -20,6 +20,13 @@ def remote_1(args):
         os.path.join(scriptDir, scriptName), baseDir, outputDir, json.dumps(args["input"])
     ]
 
+    computation_output = {
+        "output": {},
+        # should be a list of files created -ross
+        "success": True
+    }
+    return json.dumps(computation_output)
+
     result = subprocess.run(regr_args,
                 text=True,
                 capture_output=True)

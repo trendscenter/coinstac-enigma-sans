@@ -76,7 +76,20 @@ PredictCovs <- function(predictor) {
       "SANSFac2wSANSMAP"="AsocialityFac + MAP", 
       "SANSFac3wSANSMAP"="AvolitionFac + MAP", 
       "SANSFac4wSANSMAP"="BluntedAffectFac + MAP", 
-      "SANSFac5wSANSMAP"="AlogiaFac + MAP"
+      "SANSFac5wSANSMAP"="AlogiaFac + MAP",
+      # For PANSS Measures
+      "Total"="Total ",, 
+      "Neg_Total"="Neg_Total", 
+      "Pos_Total"="Pos_Total", 
+      "Gen_Total"="Gen_Total", 
+      "EXP_Total"="EXP_Total", 
+      "MAP_Total"="MAP_Total",
+      "EXP_TotalwTotal"="EXP_Total + Total",
+      "EXP_TotalwGen_Total"="EXP_Total + Gen_Total",
+      "EXP_TotalwNeg_Total"="EXP_Total + Neg_Total",
+      "MAP_TotalwTotal"="MAP_Total + Total",
+      "MAP_TotalwGen_Total"="MAP_Total + Gen_Total",
+      "MAP_TotalwNeg_Total"="MAP_Total + Neg_Total"
     )
 
   return(predictString)
