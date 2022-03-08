@@ -38,16 +38,13 @@ def remote_1(args):
         # should be a list of files created -ross
         "success": True
     }
-    return json.dumps(computation_output)
+    return computation_output
 
 
-if __name__ == '__main__':
-
-    parsed_args = json.loads(sys.stdin.read())
+def start(parsed_args):
     phase_key = list(listRecursive(parsed_args, 'computation_phase'))
 
     if 'local_1' in phase_key:
-        computation_output = remote_1(parsed_args)
-        sys.stdout.write(computation_output)
+        return remote_1(parsed_args)
     else:
         raise ValueError("Error occurred at Remote")

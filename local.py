@@ -53,16 +53,13 @@ def local_1(args):
 
     computation_output = {"output": output_dict}
 
-    return json.dumps(computation_output)
+    return computation_output
 
 
-if __name__ == '__main__':
-
-    parsed_args = json.loads(sys.stdin.read())
+def start(parsed_args):
     phase_key = list(listRecursive(parsed_args, 'computation_phase'))
 
     if not phase_key:
-        computation_output = local_1(parsed_args)
-        sys.stdout.write(computation_output)
+        return local_1(parsed_args)
     else:
         raise ValueError("Error occurred at Local")
