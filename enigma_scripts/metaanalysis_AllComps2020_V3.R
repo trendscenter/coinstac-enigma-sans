@@ -1,8 +1,5 @@
 #R
 
-# clear environment
-rm(list=ls())
-
 library(tidyverse)
 library(rjson)
 args = commandArgs(trailingOnly=TRUE)

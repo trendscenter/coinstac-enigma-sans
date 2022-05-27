@@ -19,6 +19,7 @@ CovarFile = file.path(baseDir, args[7])
 CohortInfoFile = file.path(baseDir, args[8])
 
 if (!file.exists(CohortInfoFile)) {
+  print(CohortInfoFile)
   message("CohortInfo.csv file is missing  please make sure this R script is in the directory with the csv files, and your R working directory is set to that directory")
   quit(status=1)
 }
