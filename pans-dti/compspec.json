@@ -1,0 +1,47 @@
+{
+  "meta": {
+    "name": "ENIGMA in COINSTAC",
+    "id": "enigma-pans",
+    "version": "v1.0.0",
+    "repository": "https:\/\/github.com\/trendscenter\/coinstac-enigma",
+    "description": "ENIGMA PANS R Scripts for Coinstac",
+    "compspecVersion": 2
+  },
+  "computation": {
+    "type": "docker",
+    "dockerImage": "coinstacteam/enigma-pans",
+    "command": [
+      "python",
+      "\/computation\/entry.py"
+    ],
+    "remote": {
+      "type": "docker",
+      "dockerImage": "coinstacteam/enigma-pans",
+      "command": [
+        "python",
+        "\/computation\/entry.py"
+      ]
+    },
+    "input": {
+      "data": {
+        "label": "Data",
+        "type": "files",
+        "items": ["ENIGMA"],
+        "extensions": [["csv","txt"]],
+        "order": 0,
+        "source": "member"
+      }
+    },
+    "output": {
+      "PC_global": {
+        "type": "array"
+      },
+      "projM_global": {
+        "type" : "array"
+      },
+      "bkprojM_global" : {
+        "type" : "array"
+      }
+    }
+  }
+}

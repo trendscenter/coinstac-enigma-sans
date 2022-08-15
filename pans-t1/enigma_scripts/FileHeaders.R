@@ -1,6 +1,39 @@
 
 
 # the header rows we expect in all the files
+PANSScols = c(
+  "SubjID",
+  "PANSS1",
+  "PANSS2",
+  "PANSS3",
+  "PANSS4",
+  "PANSS5",
+  "PANSS6",
+  "PANSS7",
+  "PANSS8",
+  "PANSS9",
+  "PANSS10",
+  "PANSS11",
+  "PANSS12",
+  "PANSS13",
+  "PANSS14",
+  "PANSS15",
+  "PANSS16",
+  "PANSS17",
+  "PANSS18",
+  "PANSS19",
+  "PANSS20",
+  "PANSS21",
+  "PANSS22",
+  "PANSS23",
+  "PANSS24",
+  "PANSS25",
+  "PANSS26",
+  "PANSS27",
+  "PANSS28",
+  "PANSS29",
+  "PANSS30"
+)
 
 CortCols = c(
   "SubjID",
