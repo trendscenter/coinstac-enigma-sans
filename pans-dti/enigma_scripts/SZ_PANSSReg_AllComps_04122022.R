@@ -14,7 +14,7 @@ FAFile = file.path(baseDir, args[3])
 ADFile = file.path(baseDir, args[4])
 RDFile = file.path(baseDir, args[5])
 MDFile = file.path(baseDir, args[6])
-SANSFile = file.path(baseDir, args[7])
+PANSSFile = file.path(baseDir, args[7])
 CovarFile = file.path(baseDir, args[8])
 CohortInfoFile = file.path(baseDir, args[9])
 

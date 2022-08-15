@@ -9,7 +9,6 @@ outputDir = args[2]
 siteMeta <- fromJSON(args[3])
 NumDir=args[4]
 
-setwd("/Users/vanerp/Documents/GitHub/enigma_sz_negative_symptoms/DTI_SANS/Rcode_meta_analysis")
 #curDir=getwd()
 #resultsDir=paste0(curDir, "/../results/")
 resultsDir="../results"

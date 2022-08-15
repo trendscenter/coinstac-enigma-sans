@@ -9,13 +9,14 @@ from utils import listRecursive
 
 def local_1(args):
     scriptDir = "/computation/enigma_scripts"
-    scriptName = "SZ_SANSReg_004102020_AllComps.R"
+    scriptName = "SZ_SANSReg_AllComps_04122022.R"
     RScriptDir = "/usr/bin/Rscript"
 
     fileKeys = [
-        'CorticalMeasuresENIGMA_ThickAvg', 'CorticalMeasuresENIGMA_SurfAvg',
-        'LandRvolumes', 'SANS', 'Covariates', 'CohortInfo'
+        'metr_FA', 'metr_AD','metr_RD', 'metr_MD',
+        'SANS', 'Covariates', 'CohortInfo'
     ]
+
     fileMap = {}
     for i in fileKeys:
         for j in args["input"]["data"]:

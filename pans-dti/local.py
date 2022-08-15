@@ -9,7 +9,7 @@ from utils import listRecursive
 
 def local_1(args):
     scriptDir = "/computation/enigma_scripts"
-    scriptName = "SZ_SANSReg_004102020_AllComps.R"
+    scriptName = "SZ_PANSSReg_AllComps_04122022.R"
     RScriptDir = "/usr/bin/Rscript"
 
     fileKeys = [
