@@ -1,22 +1,22 @@
 {
   "meta": {
-    "name": "ENIGMA in COINSTAC demo",
-    "id": "enigma-sans",
+    "name": "ENIGMA SANS T1 in COINSTAC",
+    "id": "enigma-sans-t1",
     "version": "v1.0.0",
     "repository": "https:\/\/github.com\/trendscenter\/coinstac-enigma-sans",
-    "description": "A test for decentralized PCA",
+    "description": "Effect Size Rankings for Negative Symptom Factor Correlations T1 SANS Analysis",
     "compspecVersion": 2
   },
   "computation": {
     "type": "docker",
-    "dockerImage": "coinstacteam/enigma-sans",
+    "dockerImage": "coinstacteam/enigma-sans-t1",
     "command": [
       "python",
       "\/computation\/entry.py"
     ],
     "remote": {
       "type": "docker",
-      "dockerImage": "coinstacteam/enigma-sans",
+      "dockerImage": "coinstacteam/enigma-sans-t1",
       "command": [
         "python",
         "\/computation\/entry.py"

@@ -1,22 +1,22 @@
 {
   "meta": {
-    "name": "ENIGMA in COINSTAC",
-    "id": "enigma-pans",
+    "name": "ENIGMA PANSS T1 in COINSTAC",
+    "id": "enigma-pans-t1",
     "version": "v1.0.0",
     "repository": "https:\/\/github.com\/trendscenter\/coinstac-enigma",
-    "description": "ENIGMA PANS R Scripts for Coinstac",
+    "description": "Effect Size Rankings for Negative Symptom Factor Correlations T1 PANSS Analysis",
     "compspecVersion": 2
   },
   "computation": {
     "type": "docker",
-    "dockerImage": "coinstacteam/enigma-pans",
+    "dockerImage": "coinstacteam/enigma-pans-t1",
     "command": [
       "python",
       "\/computation\/entry.py"
     ],
     "remote": {
       "type": "docker",
-      "dockerImage": "coinstacteam/enigma-pans",
+      "dockerImage": "coinstacteam/enigma-pans-t1",
       "command": [
         "python",
         "\/computation\/entry.py"
