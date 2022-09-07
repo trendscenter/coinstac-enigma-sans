@@ -1,10 +1,11 @@
 [{
   "data": {
     "value": [
-      "CorticalMeasuresENIGMA_ThickAvg.csv",
-      "CorticalMeasuresENIGMA_SurfAvg.csv",
-			"LandRvolumes.csv",
-			"SANS.csv",
+      "metr_AD.csv",
+      "metr_FA.csv",
+      "metr_MD.csv",
+			"metr_RD.csv",
+			"PANSS.csv",
       "Covariates.csv",
       "CohortInfo.csv"
 		]
@@ -13,10 +14,11 @@
 {
   "data": {
     "value": [
-      "CorticalMeasuresENIGMA_ThickAvg.csv",
-      "CorticalMeasuresENIGMA_SurfAvg.csv",
-			"LandRvolumes.csv",
-			"SANS.csv",
+      "metr_AD.csv",
+      "metr_FA.csv",
+      "metr_MD.csv",
+			"metr_RD.csv",
+			"PANSS.csv",
       "Covariates.csv",
       "CohortInfo.csv"
 		]

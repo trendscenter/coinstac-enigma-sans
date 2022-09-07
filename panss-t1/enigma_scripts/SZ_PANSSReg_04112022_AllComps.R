@@ -1,4 +1,6 @@
 # R
+library(tidyverse)
+library(rjson)
 
 # Based on SZ_CortReg from the original cortical analysis Written by TVE, LS, DPH, BG, and JE for the ENIGMA SZ Working Group
 
@@ -51,9 +53,7 @@ write.table(CohortInfo, file=paste0(outputdir,"CohortInfo_output.csv"), sep=",",
 
 # Create .log file and redirect all message output to this file
 messages <- file(paste0(outputdir,"PANSSscriptOut.txt"), open="wt")
-sink(messages, type="message")
 sink(messages, type="output", split=TRUE)
-
 cat("ENIGMA-SCHIZOPHRENIA PANSS FACTORS ANALYSES LOG FILE\n")
 cat("Version 1.0 April 11, 2022\n")
 cat(paste0("Name of the cohort: ", cohort, "\n"))
@@ -64,10 +64,10 @@ cat("Started the analysis on ", format(Sys.time(),usetz = TRUE), ".\n\n", sep = 
 
 # will need to source files here with external functions
 
-source("./FileHeaders.R")
-source("./Symptom_Functions.R")
-source("./RegressFunc.R")
-source('./WriteRaw.R')
+source("./enigma_scripts/FileHeaders.R")
+source("./enigma_scripts/Symptom_Functions.R")
+source("./enigma_scripts/RegressFunc.R")
+source('./enigma_scripts/WriteRaw.R')
 library(emmeans)
 
 # file names that have to exist this script and the input files

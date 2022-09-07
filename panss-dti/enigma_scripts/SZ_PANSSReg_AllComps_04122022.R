@@ -1,6 +1,8 @@
 # R
 
 # Based on SZ_CortReg from the original cortical analysis Written by TVE, LS, and DPH for the ENIGMA SZ Working Group
+library(tidyverse)
+library(rjson)
 
 # clear existing workspace
 rm(list=ls())
@@ -308,10 +310,7 @@ for (phenoName in c("FA", "AD", "RD", "MD")) {  # brain measure type loop
     # GlobalMeasure= switch(phenoName, "Cort" = "MThickness", "Surf" = "FullSurfArea", "SubCort" = "ICV")
     # The average for each of the 4 DTI measure (FA, AD, RD, and MD) was always named AverageFA
     # Put in this line so can easily change if this is corrected in the future, e.g., AverageFA for MD is correclty labeled as AverageMD
-    GlobalMeasure= switch(phenoName, "FA" = "AverageFA")
-    GlobalMeasure= switch(phenoName, "AD" = "AverageFA")
-    GlobalMeasure= switch(phenoName, "RD" = "AverageFA")
-    GlobalMeasure= switch(phenoName, "MD" = "AverageFA")
+    GlobalMeasure= switch(phenoName, "FA" = "AverageFA","AD" = "AverageFA","RD" = "AverageFA","MD" = "AverageFA" )
 
     # analysis for the PANSS: TOT, NEG, POS, GEN, EXP, and MAP
     # analysis for EXP covarying for TOT, GEN, and NEG

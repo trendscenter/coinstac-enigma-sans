@@ -1,7 +1,7 @@
 {
   "meta": {
     "name": "ENIGMA PANSS T1 in COINSTAC",
-    "id": "enigma-pans-t1",
+    "id": "enigma-panss-t1",
     "version": "v1.0.0",
     "repository": "https:\/\/github.com\/trendscenter\/coinstac-enigma",
     "description": "Effect Size Rankings for Negative Symptom Factor Correlations T1 PANSS Analysis",
@@ -9,14 +9,14 @@
   },
   "computation": {
     "type": "docker",
-    "dockerImage": "coinstacteam/enigma-pans-t1",
+    "dockerImage": "coinstacteam/enigma-panss-t1",
     "command": [
       "python",
       "\/computation\/entry.py"
     ],
     "remote": {
       "type": "docker",
-      "dockerImage": "coinstacteam/enigma-pans-t1",
+      "dockerImage": "coinstacteam/enigma-panss-t1",
       "command": [
         "python",
         "\/computation\/entry.py"
@@ -42,6 +42,8 @@
       "bkprojM_global" : {
         "type" : "array"
       }
+    },
+    "display": {
     }
   }
 }

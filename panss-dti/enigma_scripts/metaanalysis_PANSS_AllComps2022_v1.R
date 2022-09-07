@@ -1,4 +1,6 @@
 #R
+library(tidyverse)
+library(rjson)
 
 # clear environment
 rm(list=ls())
@@ -50,13 +52,14 @@ for (phenoName in c("FA")) {  # brain measure type loop
       Effectsf= paste0("EffectSizes_SZ_only_",predictor,"_withSexAge_",WCov,"_",phenoName,".Rdata") # this depends on the previous output
       Modelf = paste0("Models_SZ_",predictor,"_withSexAge_",WCov,"_", phenoName,".Rdata")
 
-      cat(paste(Effectsf,"\n"))
-      cat(paste(Modelf, "\n"))
+      # cat(paste(Effectsf,"\n"))
+      # cat(paste(Modelf, "\n"))
 
      # output file
-      Outfile=paste0("MetaAnalysis_SZ_",predictor,"_withSexAge_",WCov,"_",phenoName,".txt")
+      Outfile=paste0("/MetaAnalysis_SZ_",predictor,"_withSexAge_",WCov,"_",phenoName,".txt")
      # out pdf for forest plots
       Outpdf=paste0(outputDir, "/MetaAnalysis_SZ_",predictor,"_withSexAge_",WCov,"_",phenoName,".pdf")
+      # stop(Outpdf)
       pdf(Outpdf)
 
       cat(paste("Creating: ", Outfile,"\n"))

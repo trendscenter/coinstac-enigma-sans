@@ -1,24 +1,24 @@
 [{
   "data": {
     "value": [
-      "CorticalMeasuresENIGMA_ThickAvg.csv",
-      "CorticalMeasuresENIGMA_SurfAvg.csv",
-			"LandRvolumes.csv",
+      "metr_AD.csv",
+      "metr_FA.csv",
+      "metr_MD.csv",
+			"metr_RD.csv",
 			"SANS.csv",
       "Covariates.csv",
-      "CohortInfo.csv"
-		]
+      "CohortInfo.csv"		]
   }
 },
 {
   "data": {
     "value": [
-      "CorticalMeasuresENIGMA_ThickAvg.csv",
-      "CorticalMeasuresENIGMA_SurfAvg.csv",
-			"LandRvolumes.csv",
+      "metr_AD.csv",
+      "metr_FA.csv",
+      "metr_MD.csv",
+			"metr_RD.csv",
 			"SANS.csv",
       "Covariates.csv",
-      "CohortInfo.csv"
-		]
+      "CohortInfo.csv"		]
   }
 }]

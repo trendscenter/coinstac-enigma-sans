@@ -42,6 +42,8 @@
       "bkprojM_global" : {
         "type" : "array"
       }
+    },
+    "display": {
     }
   }
 }

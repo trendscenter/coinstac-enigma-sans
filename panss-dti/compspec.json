@@ -1,7 +1,7 @@
 {
   "meta": {
     "name": "ENIGMA PANSS DTI in COINSTAC",
-    "id": "enigma-pans-dti",
+    "id": "enigma-panss-dti",
     "version": "v1.0.0",
     "repository": "https:\/\/github.com\/trendscenter\/coinstac-enigma",
     "description": "Effect Size Rankings for Negative Symptom Factor Correlations DTI PANSS Analysis",
@@ -9,14 +9,14 @@
   },
   "computation": {
     "type": "docker",
-    "dockerImage": "coinstacteam/enigma-pans-dti",
+    "dockerImage": "coinstacteam/enigma-panss-dti",
     "command": [
       "python",
       "\/computation\/entry.py"
     ],
     "remote": {
       "type": "docker",
-      "dockerImage": "coinstacteam/enigma-pans-dti",
+      "dockerImage": "coinstacteam/enigma-panss-dti",
       "command": [
         "python",
         "\/computation\/entry.py"
@@ -42,6 +42,8 @@
       "bkprojM_global" : {
         "type" : "array"
       }
+    },
+    "display": {
     }
   }
 }

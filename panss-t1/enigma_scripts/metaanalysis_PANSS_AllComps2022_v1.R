@@ -1,4 +1,6 @@
 #R
+library(tidyverse)
+library(rjson)
 
 # clear environment
 rm(list=ls())
@@ -51,6 +53,7 @@ for (phenoName in c("Cort", "Surf", "SubCort")) {  # brain measure type loop
      # output file
       Outfile=paste0("MetaAnalysis_SZ_",predictor,"_withSexAge_",WCov,"_",phenoName,".txt")
      # out pdf for forest plots
+      Outpdf=paste0(outputDir, "/MetaAnalysis_SZ_",predictor,"_withSexAge_",WCov,"_",phenoName,".pdf")
       Outpdf=paste0(outputDir, "/MetaAnalysis_SZ_",predictor,"_withSexAge_",WCov,"_",phenoName,".pdf")
       pdf(Outpdf)
 

@@ -28,10 +28,11 @@ def local_1(args):
     file4 = fileMap[fileKeys[3]]
     file5 = fileMap[fileKeys[4]]
     file6 = fileMap[fileKeys[5]]
+    file7 = fileMap[fileKeys[6]]
     regr_args = [
         RScriptDir,
         os.path.join(scriptDir, scriptName), args["state"]["baseDirectory"],
-        args["state"]["transferDirectory"], file1, file2, file3, file4, file5, file6
+        args["state"]["transferDirectory"], file1, file2, file3, file4, file5, file6, file7
     ]
 
     result = subprocess.run(
@@ -42,7 +43,7 @@ def local_1(args):
     if result.returncode != 0:
         raise Exception("R script failed: " + result.stderr + "\n" + result.stdout)
 
-    with open(os.path.join(args["state"]["baseDirectory"], file6)) as f:
+    with open(os.path.join(args["state"]["baseDirectory"], file7)) as f:
         reader = csv.reader(f)
         cohortDirectory = "output_sz_panss_factors_" + next(reader)[0].replace(" ", "_")
 

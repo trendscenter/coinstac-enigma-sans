@@ -280,9 +280,9 @@ Covcols = c(
   "CPZ",
   "AO",
   "DURILL",
-  "PANSSTOT",
-  "PANSSPOS",
-  "PANSSNEG",
+  "SANSTOT",
+  "SANSPOS",
+  "SANSNEG",
   "SAPSTOT",
   "SANSTOT",
   "HAND",
@@ -352,4 +352,3 @@ PANSScols = c(
   "PANSS29",
   "PANSS30"
 )
-

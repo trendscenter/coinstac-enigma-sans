@@ -1,4 +1,6 @@
 # R
+library(tidyverse)
+library(rjson)
 
 # Based on SZ_CortReg from the original cortical analysis Written by TVE, LS, and DPH for the ENIGMA SZ Working Group
 
@@ -10,7 +12,7 @@ args = commandArgs(trailingOnly=TRUE)
 baseDir = args[1]
 transferDir = args[2]
 
-# specify directory the inputdir that contains the follwing sample .csv files:
+# specify directory the baseDir that contains the follwing sample .csv files:
 # CohortInfo.csv
 # Covariates.csv
 # SANS.csv
@@ -18,14 +20,11 @@ transferDir = args[2]
 # metr_AD.csv
 # metr_RD.csv
 # metr_MD.csv
-inputdir<-paste0(getwd(),"/")
-# Optional: specify input directory if the files above are not in the code directory
-inputdir="../csv/FBIRN_data_with_SANS/"
 
 # First get cohort information. It not present, stop.
-CohortInfoFile = paste0(inputdir, "CohortInfo.csv")
+CohortInfoFile = file.path(baseDir, "CohortInfo.csv")
 if (!file.exists(CohortInfoFile)) {
-  stop("CohortInfo.csv file is missing, please make sure it located in your specified inputdir:", inputdir)
+  stop("CohortInfo.csv file is missing, please make sure it located in your specified baseDir:", baseDir)
 }
 CohortInfo <- read.csv(CohortInfoFile, header=F) # Read in the Cohort Information, this csv file should contain: "COHORT Acronym, analyst name, analyst e-mail address".
 CohortName=CohortInfo[1,1]
@@ -36,7 +35,7 @@ cohort <- gsub(" ", "_", CohortName)
 #save(CohortInfo, file="CohortInfo_output.Rdata")
 #write.table(CohortInfo, file="CohortInfo_output.csv", sep=",",  row.names=FALSE, col.names=FALSE, quote = FALSE)
 # Present a message that the script is running
-cat(paste0("Your Cohort Name is: ", cohort," - Starting analysis...\n")) 
+cat(paste0("Your Cohort Name is: ", cohort," - Starting analysis...\n"))
 
 # Make a new directory relative to the working directory to which output is written
 outputdir=paste0(getwd(),"/../results/output_sz_sans_factors_",cohort,"/")
@@ -48,7 +47,6 @@ write.table(CohortInfo, file=paste0(outputdir,"CohortInfo_output.csv"), sep=",",
 
 # Create .log file and redirect all message output to this file
 messages <- file(paste0(outputdir,"SANSscriptOut.txt"), open="wt")
-sink(messages, type="message")
 sink(messages, type="output", split=TRUE)
 
 cat("ENIGMA-SCHIZOPHRENIA SANS FACTORS ANALYSES LOG FILE\n")
@@ -61,21 +59,21 @@ cat("Started the analysis on ", format(Sys.time(),usetz = TRUE), ".\n\n", sep = 
 
 # will need to source files here with external functions
 
-source("./FileHeaders.R")
-source("./Symptom_Functions.R")  
-source("./RegressFunc.R")
-source('./WriteRaw.R')  
+source("./enigma_scripts/FileHeaders.R")
+source("./enigma_scripts/Symptom_Functions.R")
+source("./enigma_scripts/RegressFunc.R")
+source("./enigma_scripts/WriteRaw.R")
 library(emmeans)
 
 # file names that have to exist this script and the input files
 #Rscript = "SZ_SANSReg_AllComps_FA_04122022.R"  # This file
-#dtiFile = paste0(inputdir, "metr_FA.csv")
-FAFile = paste0(inputdir, "metr_FA.csv")
-ADFile = paste0(inputdir, "metr_AD.csv")
-RDFile = paste0(inputdir, "metr_RD.csv")
-MDFile = paste0(inputdir, "metr_RD.csv")
-SANSFile = paste0(inputdir, "SANS.csv")
-CovarFile = paste0(inputdir, "Covariates.csv")
+#dtiFile = paste0(baseDir, "metr_FA.csv")
+FAFile = file.path(baseDir, "metr_FA.csv")
+ADFile = file.path(baseDir, "metr_AD.csv")
+RDFile = file.path(baseDir, "metr_RD.csv")
+MDFile = file.path(baseDir, "metr_MD.csv")
+SANSFile = file.path(baseDir, "SANS.csv")
+CovarFile = file.path(baseDir, "Covariates.csv")
 
 # make sure your working directory is where the .csv files are and this file is in that directory--this is not a complete check!
 if (!file.exists(SANSFile)) {
@@ -170,12 +168,12 @@ if (anyDuplicated(SANS[, c("SubjID")]) != 0) {
 }
 
 # check that SANS subjIDs are same as cases in Covs, assuming controls Dx = 0 and cases = 1
-# this might be needed but I don't think it is 
+# this might be needed but I don't think it is
 #pat = which(Covs$Dx == 1)
 #cases = Covs[pat, ]$SubjID
 #S <- SANS$SubjID
-#if(sort(as.character(S)) != sort(as.character(cases))) { 
-#cat(paste0('WARNING: SANS and Covs. have non-matching patient SubjIDs.','\n')) 
+#if(sort(as.character(S)) != sort(as.character(cases))) {
+#cat(paste0('WARNING: SANS and Covs. have non-matching patient SubjIDs.','\n'))
 #cat('Please make sure the patients with Covariates and SANS are equal.','\n') }
 #}
 
@@ -197,7 +195,7 @@ if((n.fem + n.mal) != length(Covs$Sex)){
     stop('Did you remember to code the Sex covariate as Males=1 and Females=2?\n')
 }
 
-# calculate the SANS factorizations here and add to the SANS matrix--external function 
+# calculate the SANS factorizations here and add to the SANS matrix--external function
 
 SANS = CalcSANS(SANS)
 
@@ -241,7 +239,7 @@ if (n.sites != 0) {
 # Put a for loop here for SANSSum "SANSSum" "MAP" "EXP" "AnhedoniaFac" "AsocialityFac" "AvolitionFac" "BluntedAffectFac" "AlogiaFac"
 cat(paste0("Total patients in SANS ", length(SANS[,1]), "\n"))
 for (phenoName in c("SANSSum", "SANSMAP", "SANSEXP",
-                    "SANSGlobal1", "SANSGlobal2", "SANSGlobal3", "SANSGlobal4", 
+                    "SANSGlobal1", "SANSGlobal2", "SANSGlobal3", "SANSGlobal4",
                     "SANSFac1", "SANSFac2", "SANSFac3", "SANSFac4", "SANSFac5")) {  # All the possible phenoNames!
 
   phenoName_string = PredictCovs(phenoName)  # gets the string for the model
@@ -255,7 +253,7 @@ for (phenoName in c("SANSSum", "SANSMAP", "SANSEXP",
   genderMod = lm(sexform, data=merged_orderedFA)
 
   # save the model, the number of men/women included
-  # "d.cort"      "low.ci.cort" "n.controls"  "n.patients"  "se.cort"     "up.ci.cort" 
+  # "d.cort"      "low.ci.cort" "n.controls"  "n.patients"  "se.cort"     "up.ci.cort"
   # TVE: we should probably added the estimated means / least square means to the table also
 
   # pull marginal means
@@ -318,54 +316,51 @@ cc = "asis"  # for the moment! No complete cases only
 cat("Starting pheno loop\n")
 
 for (phenoName in c("FA", "AD", "RD", "MD")) {  # brain measure type loop
-  
+
     # extract data subsets using the phenotypic-specific dataset from above
-    # Use the total SANS we created  
-    
+    # Use the total SANS we created
+
     dataset = paste0("merged_ordered", phenoName)  # get the right one: FA
     merged_ordered0 = get(dataset)
-    
+
     merged_ordered_SANSSum <- merged_ordered0[((merged_ordered0$Dx == 1) & !(is.na(merged_ordered0$SANSSum))), ]
-    
+
     # Check nsub with data
     # L = merged_ordered_SANSSum[!is.na(merged_ordered_SANSSum[,18]),18]
     # Where SANSTOT != NA
     L = merged_ordered_SANSSum[!is.na(merged_ordered_SANSSum$SANSSum),which(colnames(merged_ordered_SANSSum)=="SANSSum")]
     cat(paste0("Total subjects in SANS: ", length(L), "\n"))
-    
-    
+
+
     # code for the globalMeasure to include
     # GlobalMeasure= switch(phenoName, "Cort" = "MThickness", "Surf" = "FullSurfArea", "SubCort" = "ICV")
     # The average for each of the 4 DTI measure (FA, AD, RD, and MD) was always named AverageFA
     # Put in this line so can easily change if this is corrected in the future, e.g., AverageFA for MD is correclty labeled as AverageMD
-    GlobalMeasure= switch(phenoName, "FA" = "AverageFA")
-    GlobalMeasure= switch(phenoName, "AD" = "AverageFA")
-    GlobalMeasure= switch(phenoName, "RD" = "AverageFA")
-    GlobalMeasure= switch(phenoName, "MD" = "AverageFA")
-  
-    
-    # one analysis for the total SANS,  
+    GlobalMeasure= switch(phenoName, "FA" = "AverageFA","AD" = "AverageFA","RD" = "AverageFA","MD" = "AverageFA" )
+
+
+    # one analysis for the total SANS,
     # one analysis for each of the five factors separately, and
     # one analysis for each of the FOUR global scores separately (No Global 5)
     # one analysis for the MAP and EXP separately
-    # then doing all sorts of checking for covariation... 
-    
+    # then doing all sorts of checking for covariation...
+
     for (predictor in c("SANSSum", "SANSMAP", "SANSEXP",
-                        "SANSGlobal1", "SANSGlobal2", "SANSGlobal3", "SANSGlobal4",  
+                        "SANSGlobal1", "SANSGlobal2", "SANSGlobal3", "SANSGlobal4",
                         "SANSFac1", "SANSFac2", "SANSFac3", "SANSFac4", "SANSFac5",
                         "SANSMAPwSANSSum", "SANSEXPwSANSSum",
-                        "SANSGlobal1wSANSSum", "SANSGlobal2wSANSSum", "SANSGlobal3wSANSSum", "SANSGlobal4wSANSSum",  
+                        "SANSGlobal1wSANSSum", "SANSGlobal2wSANSSum", "SANSGlobal3wSANSSum", "SANSGlobal4wSANSSum",
                         "SANSFac1wSANSSum", "SANSFac2wSANSSum", "SANSFac3wSANSSum", "SANSFac4wSANSSum", "SANSFac5wSANSSum",
-                        "SANSGlobal1wSANSEXP", "SANSGlobal2wSANSEXP", "SANSGlobal3wSANSEXP", "SANSGlobal4wSANSEXP", 
+                        "SANSGlobal1wSANSEXP", "SANSGlobal2wSANSEXP", "SANSGlobal3wSANSEXP", "SANSGlobal4wSANSEXP",
                         "SANSFac1wSANSEXP", "SANSFac2wSANSEXP", "SANSFac3wSANSEXP", "SANSFac4wSANSEXP", "SANSFac5wSANSEXP",
-                        "SANSGlobal1wSANSMAP", "SANSGlobal2wSANSMAP", "SANSGlobal3wSANSMAP", "SANSGlobal4wSANSMAP", 
+                        "SANSGlobal1wSANSMAP", "SANSGlobal2wSANSMAP", "SANSGlobal3wSANSMAP", "SANSGlobal4wSANSMAP",
                         "SANSFac1wSANSMAP", "SANSFac2wSANSMAP", "SANSFac3wSANSMAP", "SANSFac4wSANSMAP", "SANSFac5wSANSMAP"
     )) {  # All the possible predictors!
 
-      
-                  
+
+
         #predictor_string = PredictCovs(predictor)  # gets the string for the model
-    
+
         predictor_string = PredictCovs(predictor)
 
         # This code is outdated, NumPredict is always 1
@@ -375,15 +370,15 @@ for (phenoName in c("FA", "AD", "RD", "MD")) {  # brain measure type loop
         #    1
         #)  # this sets up how many factors' effect sizes to save later
         NumPredict=1
-        
-        # load data for this pheno 
+
+        # load data for this pheno
         merged_ordered = merged_ordered_SANSSum
-        
+
         #cat(paste0("dataset and pheno & predictor & global off/on ", cc," ", phenoName, " ", predictor_string, " ", GlobalMeasure, "\n"))
         cat(paste0("dataset and pheno & predictor & global off/on ", cc," ", phenoName, " ", predictor_string, " \n"))
-        
+
         n.patients = NULL
-        
+
         site = NULL  # These are just string variables that modify the model in R if there are Site variables in the Covariates.csv file
         if (n.sites != 0) {
             site = " + "  #Starts the string to add-on Site variables
@@ -395,13 +390,13 @@ for (phenoName in c("FA", "AD", "RD", "MD")) {  # brain measure type loop
                 }
             }
         }  # end site construction
-        
-        
+
+
         if (nrow(merged_ordered) > (n.sites + 5)) {  # do or not do, there is no try (if enough subjects, run)
             # this was 3 but it should be 5
-            
+
             # Create list of covariates with available data - more than 20 subjects
-            WCovs<-c("NoCovs","WG","WSum") # initialize array WCov with once that are definitely present: NoCovs and WG 
+            WCovs<-c("NoCovs","WG","WSum") # initialize array WCov with once that are definitely present: NoCovs and WG
 
             # Need to make sure the length checks patients' only data
             # length(Covs$IQ[Covs$Dx == 1 & !is.na(Covs$IQ)])
@@ -435,11 +430,11 @@ for (phenoName in c("FA", "AD", "RD", "MD")) {  # brain measure type loop
             #for ( WCov in c("NoCovs","WG", "WSum", "WIQ", "WCPZ", "WAO", "WAP")) {  # loop for other covariates: Global brain, IQ, CPZ equiv, AO, AP group
             for ( WCov in WCovs ) {
             cat(paste0("Running: Regression predictor ", predictor, " against ", phenoName, ", ", cc, ", in SZ patients covary for ", WCov, ", Age and Sex \n"))
-            
+
             # set up model variables that don't change in this loop
                 if(WCov == "WG") {
                     glob=paste0("+", GlobalMeasure, sep="")
-                } else if (WCov == "WIQ") { 
+                } else if (WCov == "WIQ") {
                     glob="+ IQ "
                 } else if (WCov == "WCPZ") {
                     glob="+ CPZ "
@@ -452,70 +447,70 @@ for (phenoName in c("FA", "AD", "RD", "MD")) {  # brain measure type loop
                 } else {  # default -- no covariates
                     glob=""
                 }
-                
-                
+
+
                 # number of brain measures is the total columns subtracting out Covs and SANS and global means
                 # Npheno = ncol(merged_ordered) - ncol(Covs) - ncol(SANS) - 2
                 # Why was -2 removed here?
                 Npheno = ncol(merged_ordered) - ncol(Covs) - ncol(SANS) # - 2
-                
+
                 #if(phenoName == "SubCort")
                 #    Npheno = Npheno+1  # only one global covariate in the file, not two
-                
+
                 Startcol = ncol(Covs) + 1
                 Endcol = Startcol + Npheno # this should vary between cortical and subcortical
-                 
-                
+
+
                 # Store models for troubleshooting
                 models.cort = NULL  # This will become a list where we store all of the models made by lm
-                
+
                 # allocate empty vectors to store adjust effect sizes, se, ci (noicv)
                 r.cort = matrix(NA, nrow= Npheno+1, ncol = NumPredict)
                 n.patients = matrix(NA, nrow = Npheno+1, ncol=1)
-                
+
                 # se.cort = NULL
                 # low.ci.cort = NULL
                 # up.ci.cort = NULL
-                
+
                 # Loop through and perform each regression
-               
-            for (x in (Startcol:Endcol)) {  
+
+            for (x in (Startcol:Endcol)) {
                 # do the model for each brain measure (column)
-                
+
                 pheno = merged_ordered[!is.na(merged_ordered[, x]), x]  #Check to make sure there are observations for a given structure
-                
+
                 # check if the phenotype is singular after NA removal
                 if (length(pheno) == 0) {
                   next  # Skip to the next measure if there are no observations
                 }
-                
+
                 # Run the modelfor each brain measure x
                 DepVar = merged_ordered[, x]
-                
+
                 thisformula = as.formula(paste("DepVar ~ ", predictor_string, " + Age + Sex", glob, site, sep = ""))
-                
+
                 tmp=lm(thisformula, data=merged_ordered)
-         
+
                 models.cort[[x - ncol(Covs)]] = tmp  #Store the model fit for future reference
-                
+
                 # subjects can be dropped if they are missing so we can get the precise number of controls/patients for each region tested
                 # n.controls[x - ncol(Covs)] = length(which(tmp$model[, 2] == 0))
                 # n.patients[x - ncol(Covs)] = length(which(tmp$model[, 2] == 1))
-                
+
                 n.controls = 0 # none used in this analysis
                 n.patients[x-ncol(Covs)] = length(tmp$model[,2]) # this works!
-                
-                
+
+
                 # extract effect sizes for the predictors
                 # partcor.i <- pcor.test(tmp$model[1],tmp$model[,2],tmp$model[,c(3:ncol(tmp$model))])
-                
+
                 # cohens = cohens_f(tmp) # from sjstats
-                
+
                 # get the t, turn it into an r (slightly biased if not normally distributed )
                 tvalue = coef(summary(tmp))[2:(NumPredict+1),'t value']
-                df = df.residual(tmp)  
+                df = df.residual(tmp)
                 r = tvalue/(sqrt(tvalue*tvalue + df))
-                
+
                 r.cort[x-ncol(Covs),]= r # this should save the effects for the first predictor
 
                 # Exclude components of the lm() object that from which individual-level data can be recovered
@@ -524,29 +519,29 @@ for (phenoName in c("FA", "AD", "RD", "MD")) {  # brain measure type loop
                 # fitted.values
                 models.cort[[x - ncol(Covs)]]["fitted.values"] <- NULL
                 # residuals
-                models.cort[[x - ncol(Covs)]]["residuals"] <- NULL                
-                
+                models.cort[[x - ncol(Covs)]]["residuals"] <- NULL
+
             } # end for loop on x (brain regions)
                 # save results CHECK THIS
                 save(r.cort, n.patients, file = paste0(outputdir, "EffectSizes_SZ_only_", predictor, "_withSexAge_", WCov, "_", phenoName, ".Rdata"))
-                
+
                 save(models.cort, file = paste0(outputdir,"Models_SZ_", predictor, "_withSexAge_", WCov,"_", phenoName, ".Rdata"))
-        } # end With Global loop   
-            
-        
-            
+        } # end With Global loop
+
+
+
         } #end do or not do based on sample size
-            
+
         else  # not running that regression
             {
             cat("NOT Running: Regression predictor ", predictor, ",", cc, glob, " in SZ patients covary for age + Sex \n")
-        }  
+        }
 
     }  #  end predictor loop, Regressions & AP models
-    
+
 } # end phenoname loop for debugging
         #### TVE ##########
-        
+
 cat("Done working \n")
 sink()  # close the log file
 

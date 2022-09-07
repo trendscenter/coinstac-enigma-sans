@@ -52,7 +52,7 @@ for (phenoName in c("Cort", "Surf", "SubCort")) {  # brain measure type loop
 
       #cat(paste(Effectsf,"\n"))
       #cat(paste(Modelf, "\n"))
-
+      #
      # output file
       Outfile=paste0("/MetaAnalysis_SZ_",predictor,"_withSexAge_",WCov,phenoName,".txt")
      # out pdf for forest plots
