@@ -10,9 +10,6 @@ baseDir = args[1]
 outputDir = args[2]
 siteMeta <- fromJSON(args[3])
 
-NumDir=args[3]
-
-# get list of siteNames
 library(tidyverse)
 
 # create an analysis log file
@@ -56,10 +53,9 @@ for (phenoName in c("FA")) {  # brain measure type loop
       # cat(paste(Modelf, "\n"))
 
      # output file
-      Outfile=paste0("/MetaAnalysis_SZ_",predictor,"_withSexAge_",WCov,"_",phenoName,".txt")
+      Outfile=paste0("MetaAnalysis_SZ_",predictor,"_withSexAge_",WCov,"_",phenoName,".txt")
      # out pdf for forest plots
       Outpdf=paste0(outputDir, "/MetaAnalysis_SZ_",predictor,"_withSexAge_",WCov,"_",phenoName,".pdf")
-      # stop(Outpdf)
       pdf(Outpdf)
 
       cat(paste("Creating: ", Outfile,"\n"))
@@ -337,7 +333,6 @@ for (phenoName in c("FA")) {  # brain measure type loop
 # Meta-Analysis of Sex Effects
 for (dependent_variable in  c("TOT", "NEG", "POS", "GEN", "EXP", "MAP")) {  # All the possible phenoNames!
 
-  siteNumber=0
   nsites = 0 # how many sites, for each analysis
   for (siteName in names(siteMeta)) { # read in sex effect on dependent variable for each site
 

@@ -9,30 +9,8 @@ args = commandArgs(trailingOnly=TRUE)
 baseDir = args[1]
 outputDir = args[2]
 siteMeta <- fromJSON(args[3])
-NumDir=args[4]
 
-#curDir=getwd()
-#resultsDir=paste0(curDir, "/../results/")
-resultsDir="../results"
-# get the list of input directories for meta-analysis - these are the output directories from each of the sites
-#inputDirs<-list.files(path=".", pattern="^output")
-inputDirs<-list.files(resultsDir, pattern="^output")
-# get the number of input directories for the meta-analysis
-NumDir<-NROW(inputDirs)
-
-# get list of siteNames
 library(tidyverse)
-siteNames<-str_split_fixed(inputDirs, "_", 5)[,5]
-
-# create the output directory for the meta-analysis results
-#outputDir=paste0(getwd(),"/../results_meta_analysis/")
-outputDir="../results_meta_analysis/"
-if (!file.exists(outputDir)){
-  dir.create(outputDir, recursive=TRUE, showWarnings = F)
-}
-
-# now defined above
-#NumDir=2  # this should one of the args
 
 # create an analysis log file
 sink(paste(outputDir,"MetaAnalysisLog.txt", sep='/'), split=TRUE)
@@ -78,13 +56,14 @@ for (phenoName in c("FA")) {  # brain measure type loop
       Effectsf= paste0("EffectSizes_SZ_only_",predictor,"_withSexAge_",WCov,"_",phenoName,".Rdata") # this depends on the previous output
       Modelf = paste0("Models_SZ_",predictor,"_withSexAge_",WCov,"_", phenoName,".Rdata")
 
-      cat(paste(Effectsf,"\n"))
-      cat(paste(Modelf, "\n"))
+      # cat(paste(Effectsf,"\n"))
+      # cat(paste(Modelf, "\n"))
 
      # output file
       Outfile=file.path("MetaAnalysis_SZ_",predictor,"_withSexAge_",WCov,"_",phenoName,".txt")
      # out pdf for forest plots
       Outpdf=file.path(outputDir, paste0("/MetaAnalysis_SZ_",predictor,"_withSexAge_",WCov,"_",phenoName,".pdf"))
+    # expr = {
       pdf(Outpdf)
 
       cat(paste("Creating: ", Outfile,"\n"))
