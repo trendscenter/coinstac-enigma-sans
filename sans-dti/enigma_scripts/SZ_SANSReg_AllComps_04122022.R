@@ -38,7 +38,7 @@ cohort <- gsub(" ", "_", CohortName)
 cat(paste0("Your Cohort Name is: ", cohort," - Starting analysis...\n"))
 
 # Make a new directory relative to the working directory to which output is written
-outputdir=paste0(getwd(),"/../results/output_sz_sans_factors_",cohort,"/")
+outputdir=paste0(transferDir,"/output_sz_sans_factors_",cohort,"/")
 dir.create(outputdir, recursive=TRUE, showWarnings = F)
 
 # save CohortInfo to outputdir
