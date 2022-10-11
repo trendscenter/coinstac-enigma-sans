@@ -1,11 +1,11 @@
 **/.Rdata
 **/.log
 **/.DS_Store
-test/cache/
-test/remote/
-test/transfer/
-test/output/
-test/system
+**/test/cache/
+**/test/remote/
+**/test/transfer/
+**/test/output/
+**/test/system
 **/*.pdf
 **/*.txt
-test/input/remote
+**/test/input/remote

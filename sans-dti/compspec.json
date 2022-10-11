@@ -1,0 +1,49 @@
+{
+  "meta": {
+    "name": "ENIGMA SANS DTI in COINSTAC",
+    "id": "enigma-sans-dti",
+    "version": "v1.0.0",
+    "repository": "https:\/\/github.com\/trendscenter\/coinstac-enigma-sans",
+    "description": "Effect Size Rankings for Negative Symptom Factor Correlations DTI SANS Analysis",
+    "compspecVersion": 2
+  },
+  "computation": {
+    "type": "docker",
+    "dockerImage": "coinstacteam/enigma-sans-dti",
+    "command": [
+      "python",
+      "\/computation\/entry.py"
+    ],
+    "remote": {
+      "type": "docker",
+      "dockerImage": "coinstacteam/enigma-sans-dti",
+      "command": [
+        "python",
+        "\/computation\/entry.py"
+      ]
+    },
+    "input": {
+      "data": {
+        "label": "Data",
+        "type": "files",
+        "items": ["ENIGMA"],
+        "extensions": [["csv","txt"]],
+        "order": 0,
+        "source": "member"
+      }
+    },
+    "output": {
+      "PC_global": {
+        "type": "array"
+      },
+      "projM_global": {
+        "type" : "array"
+      },
+      "bkprojM_global" : {
+        "type" : "array"
+      }
+    },
+    "display": {
+    }
+  }
+}
