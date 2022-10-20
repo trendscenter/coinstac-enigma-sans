@@ -1,0 +1,26 @@
+[{
+  "data": {
+    "value": [
+      "metr_AD.csv",
+      "metr_FA.csv",
+      "metr_MD.csv",
+			"metr_RD.csv",
+			"PANSS.csv",
+      "Covariates.csv",
+      "CohortInfo.csv"
+		]
+  }
+},
+{
+  "data": {
+    "value": [
+      "metr_AD.csv",
+      "metr_FA.csv",
+      "metr_MD.csv",
+			"metr_RD.csv",
+			"PANSS.csv",
+      "Covariates.csv",
+      "CohortInfo.csv"
+		]
+  }
+}]

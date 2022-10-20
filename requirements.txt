@@ -1,4 +1,0 @@
-ujson
-asyncio
-websockets
-coinstac
